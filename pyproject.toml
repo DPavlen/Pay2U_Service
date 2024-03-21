@@ -35,9 +35,10 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 # Исключения длинных строк
 extend-exclude = [
-    "backend/backend/*.py",
+    "Pay2U_Service/Pay2U_Service/*.py",
     "**/models.py",
-    "**/email_messages.py"
+    "**/email_messages.py",
+    "**/settings.py",
 ]
 force-exclude = true
 # Линтер ruff
@@ -51,7 +52,7 @@ select = [
     "N", # pep8-naming
 ] # all rules here https://docs.astral.sh/ruff/rules/#pep8-naming-n
 fixable = ["F401", "E501"]
-ignore = ["E203", "I001"]
+ignore = ["E203", "I001", "N999"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = -1
