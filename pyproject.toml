@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11.7"
-aiohttp = "3.9.3"
 django = "5.0.2"
 #Faker = "23.3.0"
 celery = { version = "5.3.6", extras = ["redis"] }
@@ -26,6 +25,10 @@ psycopg2-binary = "2.9.9"
 python-dotenv = "1.0.0"
 pytest-django = "==4.8.0"
 ruff = "0.2.2"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.0.0"
+black = "^24.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
