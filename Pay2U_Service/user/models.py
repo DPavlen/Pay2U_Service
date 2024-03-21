@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .managers import UserManager
@@ -12,7 +12,7 @@ class User(AbstractUser):
     phone = PhoneNumberField(
         max_length=20, null=True, blank=True, verbose_name="Телефон"
     )
-    first_enter = models.BooleanField(default=True, tverbose_name="Флаг первого фхода")
+    first_enter = models.BooleanField(default=True, tverbose_name="Флаг первого входа")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
