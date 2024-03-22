@@ -1,13 +1,8 @@
+from core.constants import LenghtField
+from core.validators import first_name_validator, username_validator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from phonenumbers import phonenumber
-
-from core.constants import LenghtField
-from core.validators import (
-    username_validator,
-    first_name_validator,
-    last_name_validator,
-)
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class MyUser(AbstractUser):
@@ -15,13 +10,15 @@ class MyUser(AbstractUser):
     Кастомная модель переопределенного юзера.
     Добавлены.
     """
+
     class RoleChoises(models.TextChoices):
         """
         Определение роли юзера.
         """
+
         USER = "user"
         ADMIN = "admin"
-    # REQUIRED_FIELDS = ["first_name", "last_name", "email"]
+
     email = models.EmailField(
         max_length=LenghtField.MAX_LENGHT_EMAIL.value,
         unique=True,
@@ -33,32 +30,24 @@ class MyUser(AbstractUser):
         unique=True,
         validators=[username_validator],
     )
-    phone = phonenumber.PhoneNumber(
-    )
-
-    first_name = models.CharField(
-        "Имя пользователя",
+    full_name = models.CharField(
         max_length=LenghtField.MAX_LENGHT_FIRST_NAME.value,
-        null=True,
         blank=True,
+        verbose_name="Полное имя",
         validators=[first_name_validator],
     )
-    last_name = models.CharField(
-        "Фамилия пользователя",
-        max_length=LenghtField.MAX_LENGHT_LAST_NAME.value,
+    phone = PhoneNumberField(
+        max_length=20,
         null=True,
         blank=True,
-        validators=[last_name_validator],
+        verbose_name="Телефон",
+        unique=True,
     )
-    birth_date = models.DateField(
-        "День Рождения пользователя",
-        null=True,
-        blank=True
+    first_enter = models.BooleanField(default=True, verbose_name="Флаг первого входа")
+    icon = models.ImageField(
+        verbose_name="Фото профиля", upload_to="users/profile_photo"
     )
-    password = models.CharField(
-        "Пароль пользователя",
-        max_length=LenghtField.MAX_LENGHT_PASSWORD.value,
-    )
+    birth_date = models.DateField("День Рождения пользователя", null=True, blank=True)
     role = models.TextField(
         "Пользовательская роль юзера",
         choices=RoleChoises.choices,
@@ -73,20 +62,3 @@ class MyUser(AbstractUser):
 
     def __str__(self):
         return str(self.username)
-
-
-class UserIcon(models.Model):
-    user = models.OneToOneField(
-        MyUser, on_delete=models.CASCADE, verbose_name="Пользователь"
-    )
-    icon = models.ImageField(
-        verbose_name="Фото профиля", upload_to="users/profile_photo"
-    )
-
-    def __str__(self):
-        return self.user
-
-    class Meta:
-        ordering = ("-id",)
-        verbose_name = "Фотография пользователя"
-        verbose_name_plural = "Фотографии пользователей"
