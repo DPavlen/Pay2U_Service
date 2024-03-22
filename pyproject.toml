@@ -41,6 +41,8 @@ extend-exclude = [
     "**/models.py",
     "**/email_messages.py",
     "**/settings.py",
+    "**/migrations/",
+
 ]
 force-exclude = true
 # Линтер ruff
