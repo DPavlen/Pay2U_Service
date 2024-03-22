@@ -26,6 +26,8 @@ psycopg2-binary = "2.9.9"
 python-dotenv = "1.0.0"
 pytest-django = "==4.8.0"
 ruff = "0.2.2"
+xattr = "^1.1.0"
+phonenumbers = "^8.13.32"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
