@@ -1,18 +1,20 @@
 repos:
--   repo: local
+-   repo: https://github.com/ambv/black
+    rev: 24.3.0
     hooks:
-    -   id: ruff-linter
-        name: ruff-linter
-        description: run ruff linter from local repo
-        entry: env -i PATH=./bin:./.venv/bin:./venv/bin python3 -m ruff check . --fix --config pyproject.toml
-        language: python
-        types_or: [python]
-        require_serial: true
+    -   id: black
+        language_version: python3.11
+        exclude: (migrations)
 
-    -   id: ruff-formatter
-        name: ruff-formatter
-        description: run ruff formatter from local repo
-        entry: env -i PATH=./bin:./.venv/bin:./venv/bin python3 -m ruff format . --config pyproject.toml
-        language: python
-        types_or: [python]
-        require_serial: true
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+        args: [--settings, setup.cfg]
+
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+    -   id: flake8
+        additional_dependencies:
+          - flake8-docstrings

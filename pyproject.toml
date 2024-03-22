@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11.7"
-aiohttp = "3.9.3"
 django = "5.0.2"
 #Faker = "23.3.0"
 celery = { version = "5.3.6", extras = ["redis"] }
@@ -26,8 +25,8 @@ psycopg2-binary = "2.9.9"
 python-dotenv = "1.0.0"
 pytest-django = "==4.8.0"
 ruff = "0.2.2"
-xattr = "^1.1.0"
-phonenumbers = "^8.13.32"
+phonenumbers = "^8.12.45"
+django-phonenumber-field = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
