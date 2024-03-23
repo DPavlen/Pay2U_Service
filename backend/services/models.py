@@ -19,7 +19,7 @@ class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name="название")
     description = models.CharField(max_length=250, verbose_name="описание")
     icon = models.ImageField(
-        verbose_name="Фото профиля", upload_to="services/services_photo"
+        verbose_name="Фото категории", upload_to="services/services_photo"
     )
 
     class Meta:

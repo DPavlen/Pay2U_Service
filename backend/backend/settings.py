@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "drf_yasg",
     "phonenumber_field",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
