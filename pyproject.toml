@@ -27,6 +27,7 @@ pytest-django = "==4.8.0"
 ruff = "0.2.2"
 phonenumbers = "^8.12.45"
 django-phonenumber-field = "^6.1.0"
+drf-yasg = "^1.21.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
