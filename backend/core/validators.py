@@ -1,3 +1,4 @@
+import re
 from re import search
 
 from django.core.exceptions import ValidationError
@@ -24,3 +25,11 @@ def last_name_validator(last_name):
         raise ValidationError(
             "В фамилии пользователя используются недопустимые символы"
         )
+
+
+def validate_mobile(value):
+    """Валидация для поля "Телефон"."""
+    rule = re.compile(r"^[0-9]{10,14}$")
+
+    if not rule.search(value):
+        raise ValidationError("Неверный мобильный номер.")

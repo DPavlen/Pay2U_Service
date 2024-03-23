@@ -1,5 +1,6 @@
 from django.contrib import admin
-from Pay2U_Service.backend.services.models import Services
+
+from .models import Services
 
 
 @admin.register(Services)
