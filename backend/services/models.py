@@ -1,5 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
-from users.models import MyUser
+
+# Create your models here.
+
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -15,7 +19,7 @@ class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name="название")
     description = models.CharField(max_length=250, verbose_name="описание")
     icon = models.ImageField(
-        verbose_name="Фото профиля", upload_to="services/services_photo"
+        verbose_name="Фото категории", upload_to="services/services_photo"
     )
 
     class Meta:
@@ -82,7 +86,7 @@ class FAQ(models.Model):
     question = models.CharField(max_length=250, verbose_name="Вопрос")
     answer = models.CharField(max_length=1000, verbose_name="Ответ")
     author = models.ForeignKey(
-        MyUser, on_delete=models.PROTECT, verbose_name="Создатель вопроса"
+        User, on_delete=models.PROTECT, verbose_name="Создатель вопроса"
     )
 
     class Meta:
@@ -110,7 +114,7 @@ class Subscription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
     user = models.ForeignKey(
-        MyUser, on_delete=models.PROTECT, related_name="subscriptions"
+        User, on_delete=models.PROTECT, related_name="subscriptions"
     )
     service = models.ForeignKey(Services, on_delete=models.PROTECT, related_name="+")
     status = models.CharField(
