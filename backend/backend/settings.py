@@ -25,10 +25,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "drf_yasg",
-    "phonenumber_field",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
     "services.apps.ServicesConfig",
+    "payments.apps.PaymentsConfig",
 ]
 
 MIDDLEWARE = [

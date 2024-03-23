@@ -1,5 +1,6 @@
 from django.contrib import admin
-from services.models import Services
+
+from .models import Services
 
 
 @admin.register(Services)
