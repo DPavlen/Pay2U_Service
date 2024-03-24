@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
-# Create your models here.
+from rest_framework.exceptions import PermissionDenied
 
 User = get_user_model()
 
@@ -68,6 +67,15 @@ class Services(models.Model):
 
     def __str__(self):
         return self.name
+
+    def subscribe(self, user):
+        """Подписаться на сервис."""
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, service=self
+        )
+        if not created:
+            raise PermissionDenied({"detail": "Already enrolled."})
+        return subscription
 
 
 class FAQ(models.Model):
@@ -138,3 +146,12 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"<Subscription: {self.id}, user: {self.user_id}, service: {self.service_id}>"
+
+
+class SubscriptionPayment(models.Model):
+    """
+    Модель для связи подписки и оплаты сервиса.
+
+    """
+
+    pass
