@@ -29,7 +29,7 @@ def last_name_validator(last_name):
 
 def validate_mobile(value):
     """Валидация для поля "Телефон"."""
-    rule = re.compile(r"^[0-9]{10,14}$")
+    rule = re.compile(r"^\+?[7-8]?[0-9]{10}$")
 
     if not rule.search(value):
         raise ValidationError("Неверный мобильный номер.")
