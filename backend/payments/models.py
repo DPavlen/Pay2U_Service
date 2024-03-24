@@ -6,6 +6,8 @@ from users.models import MyUser
 class PaymentHistory(models.Model):
     """Модель истории оплаты подписки."""
 
+    objects = None
+
     class PaymentMethodChoises(models.TextChoices):
         """
         Способ оплаты подписки.
@@ -39,6 +41,8 @@ class PaymentHistory(models.Model):
 
 class Cashback(models.Model):
     """Модель получения кэшбека."""
+
+    objects = None
 
     class CashbackType(models.TextChoices):
         """
