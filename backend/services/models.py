@@ -78,33 +78,6 @@ class Services(models.Model):
         return subscription
 
 
-class FAQ(models.Model):
-    """
-    Класс для хранения списка часто задаваемых вопросов.
-
-    question - часто задаваемый вопрос
-    answer - ответ на заданный вопрос
-    created_at - дата создания вопроса
-    updated_at - дата обновленя вопроса
-    author - пользователь, создавший вопрос/ответ.
-    """
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, db_index=True)
-    question = models.CharField(max_length=250, verbose_name="Вопрос")
-    answer = models.CharField(max_length=1000, verbose_name="Ответ")
-    author = models.ForeignKey(
-        User, on_delete=models.PROTECT, verbose_name="Создатель вопроса"
-    )
-
-    class Meta:
-        verbose_name = "FAQ"
-        verbose_name_plural = "FAQ"
-
-    def __str__(self):
-        return self.question
-
-
 class Subscription(models.Model):
     """
     Модель для подписки пользователя на сервис.
