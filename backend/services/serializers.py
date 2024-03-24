@@ -3,9 +3,8 @@ import base64
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from rest_framework import serializers
-from rest_framework.relations import SlugRelatedField
 
-from .models import Category, Services
+from .models import Category, Services, Subscription
 
 User = get_user_model()
 
@@ -33,7 +32,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ServicesSerializer(serializers.ModelSerializer):
-    author = SlugRelatedField(slug_field="username", read_only=True)
     category = CategorySerializer()
     services_duration = serializers.ChoiceField(
         default=Services.Duration.ONE_MONTH, choices=Services.Duration
@@ -43,3 +41,10 @@ class ServicesSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Services
+
+
+class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = "__all__"
+        model = Subscription

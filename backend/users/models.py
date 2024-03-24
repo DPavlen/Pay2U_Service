@@ -1,5 +1,5 @@
 from core.constants import LenghtField
-from core.validators import first_name_validator, username_validator, validate_mobile
+from core.validators import username_validator, validate_mobile
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -33,7 +33,6 @@ class MyUser(AbstractUser):
         max_length=LenghtField.MAX_LENGHT_FIRST_NAME.value,
         blank=True,
         verbose_name="Полное имя",
-        validators=[first_name_validator],
     )
     phone = models.CharField(
         max_length=20,
@@ -46,7 +45,10 @@ class MyUser(AbstractUser):
 
     first_enter = models.BooleanField(default=True, verbose_name="Флаг первого входа")
     icon = models.ImageField(
-        verbose_name="Фото профиля", upload_to="users/profile_photo"
+        verbose_name="Фото профиля",
+        upload_to="users/profile_photo",
+        null=True,
+        blank=True,
     )
     birth_date = models.DateField("День Рождения пользователя", null=True, blank=True)
     role = models.TextField(
