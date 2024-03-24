@@ -1,7 +1,8 @@
 from payments.models import Cashback, PaymentHistory
 from payments.serializers import CashbackSerializer, PaymentHistorySerializer
 from rest_framework import viewsets
-from rest_framework.pagination import LimitOffsetPagination
+
+# from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 
 
@@ -18,7 +19,7 @@ class PaymentHistoryViewSet(viewsets.ModelViewSet):
     queryset = PaymentHistory.objects.all()
     serializer_class = PaymentHistorySerializer
     permission_classes = (AllowAny,)
-    pagination_class = LimitOffsetPagination
+    # pagination_class = LimitOffsetPagination
 
 
 class CashbackViewSet(viewsets.ModelViewSet):
@@ -34,4 +35,4 @@ class CashbackViewSet(viewsets.ModelViewSet):
     queryset = Cashback.objects.all()
     serializer_class = CashbackSerializer
     permission_classes = (AllowAny,)
-    pagination_class = LimitOffsetPagination
+    # pagination_class = LimitOffsetPagination
