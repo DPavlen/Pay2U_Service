@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from users.models import MyUser
 
 from .models import Category, Services, Subscription
@@ -31,9 +32,21 @@ class CategoryAdmin(admin.ModelAdmin):
         "name",
         "description",
         "icon",
+        "display_icon",  # Добавляем метод display_icon в list_display
     )
     list_display_links = ("id", "name")
     search_fields = ("name",)
+
+    def display_icon(self, obj):
+        """Возвращает отображение иконки категории."""
+        if obj.icon:
+            return format_html(
+                '<img src="{}" style="max-width:100px; '
+                'max-height:100px"/>'.format(obj.icon.url)
+            )
+        return "-"
+
+    display_icon.short_description = "Category Icon"
 
 
 @admin.register(Services)

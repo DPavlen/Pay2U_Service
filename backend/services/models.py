@@ -15,10 +15,14 @@ class Category(models.Model):
 
     """
 
+    objects = None
     name = models.CharField(max_length=20, verbose_name="название")
     description = models.CharField(max_length=250, verbose_name="описание")
     icon = models.ImageField(
-        verbose_name="Фото категории", upload_to="services/services_photo"
+        verbose_name="Фото категории",
+        upload_to="services/images/",
+        default=None,
+        blank=True,
     )
 
     class Meta:
@@ -39,6 +43,8 @@ class Services(models.Model):
     cost - стоимость за 1 месяц
     subscription_type - тип подписки.
     """
+
+    objects = None
 
     class Duration(models.TextChoices):
         ONE_MONTH = "one_month", "Один месяц"
@@ -88,6 +94,8 @@ class Subscription(models.Model):
     status - текущий статус
     """
 
+    objects = None
+
     class Status(models.TextChoices):
         ENROLLED = "enrolled", "Подписан"
         NOT_ENROLLED = "not_enrolled", "Не подписан"
@@ -116,6 +124,12 @@ class Subscription(models.Model):
         ordering = ("user",)
         verbose_name = "Подписка на сервис"
         verbose_name_plural = "Подписки на сервисы"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.service_id = None
+        self.id = None
+        self.user_id = None
 
     def __str__(self):
         return f"<Subscription: {self.id}, user: {self.user_id}, service: {self.service_id}>"
