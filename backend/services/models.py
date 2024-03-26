@@ -92,8 +92,8 @@ class Subscription(models.Model):
     """
 
     class Status(models.TextChoices):
-        SUBSCRIBED = "enrolled", "Подписан"
-        NOT_SUBSCRIBED = "not_enrolled", "Не подписан"
+        SUBSCRIBED = "subscribed", "Подписан"
+        NOT_SUBSCRIBED = "not_subscribed", "Не подписан"
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

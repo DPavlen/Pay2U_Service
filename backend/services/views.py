@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
@@ -17,6 +18,25 @@ class CategoriesViewSetViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
+
+    @swagger_auto_schema(
+        responses={
+            status.HTTP_201_CREATED: "Подписка добавлена.",
+        }
+    )
+    @action(detail=True, methods=["get"], permission_classes=(IsAuthenticated,))
+    def services(self, request, **kwargs):
+        """
+        Показать все категории сервиса.
+        """
+        try:
+            services = Services.objects.filter(
+                category=Category.objects.get(id=kwargs.get("pk"))
+            )
+        except Category.DoesNotExist:
+            raise Http404
+        serializer = ServicesSerializer(services, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ServicesViewSet(viewsets.ModelViewSet):
@@ -52,10 +72,6 @@ class ServicesViewSet(viewsets.ModelViewSet):
     def disable(self, request, **kwargs):
         """
         Отписать пользователя от участия в данном курсе.
-
-        Примечание:
-            Это действие требует аутентификации пользователя и соответствующих прав.
-
         """
         user = self.request.user
         service = get_object_or_404(Services, **kwargs)
