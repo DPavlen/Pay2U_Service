@@ -6,8 +6,17 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Services, Subscription
-from .serializers import ServicesSerializer, UserSubscriptionServiceSerializer
+from .models import Category, Services, Subscription
+from .serializers import CategorySerializer, ServicesSerializer, UserSubscriptionServiceSerializer
+
+
+class CategoriesViewSetViewSet(viewsets.ModelViewSet):
+    """Класс для управления категориями."""
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination
 
 
 class ServicesViewSet(viewsets.ModelViewSet):
@@ -55,3 +64,14 @@ class ServicesViewSet(viewsets.ModelViewSet):
         )
         subscription.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SubscriptionServiceViewSet(viewsets.ModelViewSet):
+    """
+    Класс для управления Подписками пользователей.
+    """
+
+    queryset = Subscription.objects.all()
+    serializer_class = UserSubscriptionServiceSerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination

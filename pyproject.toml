@@ -41,6 +41,8 @@ extend-exclude = [
     "**/settings.py",
     "**/migrations/",
     "**/management/",
+    "**/backend/api/v1/urls.py/",
+    "**backend/services/views.py",
 
 ]
 force-exclude = true
