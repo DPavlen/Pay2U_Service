@@ -49,9 +49,12 @@ class ServicesViewSet(viewsets.ModelViewSet):
 
         """
         user = self.request.user
-        services = get_object_or_404(Services, **kwargs)
+        service = get_object_or_404(Services, **kwargs)
         subscription = get_object_or_404(
-            user=user, services=services, status=Subscription.Status.SUBSCRIBED
+            Subscription,
+            user=user,
+            service=service,
+            status=Subscription.Status.SUBSCRIBED,
         )
         subscription.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
