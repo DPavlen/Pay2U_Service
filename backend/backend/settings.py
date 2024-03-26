@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
@@ -24,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework.authtoken",
     "drf_yasg",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "djoser",
     "faqs.apps.FaqsConfig",
+    "api.v1.apps.ApiConfig",
 ]
 
 MIDDLEWARE = [
@@ -107,36 +108,40 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
-    "DEFAULT_FILTER_BACKENDS": [
-        "django_filters.rest_framework.DjangoFilterBackend",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 DJOSER = {
-    "LOGIN_FIELD": "username",
     "SERIALIZERS": {
         "user_create": "users.serializers.CustomUserSerializer",
-        "user_delete": "users.serializers.CustomUserDeleteSerializer",
+        "user": "users.serializers.CustomUserSerializer",
+        "current_user": "users.serializers.CustomUserSerializer",
+        "token": "djoser.serializers.TokenSerializer",
     },
-    "USE_CUSTOM_TOKEN_SERIALIZERS": True,
     "PERMISSIONS": {
-        "user": ["rest_framework.permissions.IsAuthenticated"],
-        "user_list": ["rest_framework.permissions.IsAuthenticated"],
+        "user": ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
+        "user_list": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
     },
+    "HIDE_USERS": False,
 }
 
-HIDE_USERS = True
+# HIDE_USERS = True
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
-    "AUTH_HEADER_TYPES": ("Bearer",),
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    },
+    "USE_SESSION_AUTH": False,
 }
 
 # Internationalization

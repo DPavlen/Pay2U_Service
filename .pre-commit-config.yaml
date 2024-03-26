@@ -1,10 +1,12 @@
 repos:
--   repo: https://github.com/ambv/black
-    rev: 24.3.0
-    hooks:
-    -   id: black
-        language_version: python3.11
-        exclude: (migrations)
+#-   repo: https://github.com/ambv/black
+#    rev: 24.3.0
+#    hooks:
+#    -   id: black
+#        language_version: python3.11
+#        exclude: (migrations,
+#                 /backend/api/v1/urls.py,
+#                 /backend/services/views.py)
 
 -   repo: https://github.com/pycqa/isort
     rev: 5.13.2
