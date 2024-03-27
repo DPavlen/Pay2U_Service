@@ -1,4 +1,4 @@
-from payments.models import Cashback, PaymentHistory
+from payments.models import Cashback, PaymentHistory, SubscriptionPayment
 from rest_framework import serializers
 
 
@@ -19,6 +19,18 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
             "status",
         )
         # read_only_fields = ("__all__",)
+
+
+class SubscriptionPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubscriptionPayment
+        fields = ['id', 'subscription', 'payment_history']
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['subscription'] = instance.subscription.service
+    #     representation['payment_history'] = instance.payment_history.id
+    #     return representation
 
 
 class CashbackSerializer(serializers.ModelSerializer):
