@@ -121,7 +121,9 @@ class Subscription(models.Model):
         verbose_name_plural = "Подписки на сервисы"
 
     def __str__(self):
-        return f"<Subscription: {self.id}, user: {self.user_id}, service: {self.service_id}>"
+        return (f"Пользователь: {self.user.username}, "
+                f" на сервис: '{self.service.name}' "
+                f" {self.get_status_display()}")
 
 
 class SubscriptionPayment(models.Model):

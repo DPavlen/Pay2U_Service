@@ -1,5 +1,5 @@
-from payments.models import Cashback, PaymentHistory
-from payments.serializers import CashbackSerializer, PaymentHistorySerializer
+from payments.models import Cashback, PaymentHistory, SubscriptionPayment
+from payments.serializers import CashbackSerializer, PaymentHistorySerializer, SubscriptionPaymentSerializer
 from rest_framework import viewsets
 
 # from rest_framework.pagination import LimitOffsetPagination
@@ -20,6 +20,16 @@ class PaymentHistoryViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentHistorySerializer
     permission_classes = (AllowAny,)
     # pagination_class = LimitOffsetPagination
+
+    # def get_queryset(self):
+    #     """Проверка Истории платежей по текущему user."""
+    #     user = self.request.user
+    #     return PaymentHistory.objects.filter(user=user)
+
+
+class SubscriptionPaymentViewSet(viewsets.ModelViewSet):
+    queryset = SubscriptionPayment.objects.all()
+    serializer_class = SubscriptionPaymentSerializer
 
 
 class CashbackViewSet(viewsets.ModelViewSet):

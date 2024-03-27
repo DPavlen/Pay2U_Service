@@ -1,6 +1,6 @@
 from django.urls import include, path
 from faqs.views import FaqViewSet
-from payments.views import CashbackViewSet, PaymentHistoryViewSet
+from payments.views import CashbackViewSet, PaymentHistoryViewSet, SubscriptionPaymentViewSet
 from rest_framework import routers
 from services.views import CategoriesViewSetViewSet, ServicesViewSet, SubscriptionServiceViewSet
 from users.views import CustomUserViewSet
@@ -14,6 +14,8 @@ router.register(r"users", CustomUserViewSet, "users")
 router.register(r"categories", CategoriesViewSetViewSet, basename="categories")
 router.register(r"services", ServicesViewSet, basename="services")
 router.register(r"subscriptions", SubscriptionServiceViewSet, basename="subscriptions")
+router.register(r"subscriptionspayment", SubscriptionPaymentViewSet,
+                basename="subscriptionspayment")
 router.register(r"payment_history", PaymentHistoryViewSet, basename="payment_history")
 router.register(r"cashback", CashbackViewSet, basename=" cashback")
 router.register(r"faqs", FaqViewSet, basename="faqs")

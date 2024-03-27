@@ -6,17 +6,21 @@ from users.models import MyUser
 class PaymentHistory(models.Model):
     """Модель истории оплаты подписки."""
 
-    objects = None
-
     class PaymentMethodChoises(models.TextChoices):
         """
         Способ оплаты подписки.
         """
 
+        SBP = " SBP", "СБП"
         CREDIT_CARD = "credit_card", "Кредитная карта"
         PAYPAL = "paypal", "PayPal"
         MOBILE_PAYMENT = "mobile_payment", "Мобильные платежи"
         CRYPTOCURRENCY = "cryptocurrency", "Платежные системы криптовалюты"
+
+    STATUS_CHOICES = (
+        ("payment_completed", "Оплата прошла"),
+        ("not_paid", "Не оплачено"),
+    )
 
     user = models.ForeignKey(
         MyUser, on_delete=models.CASCADE, verbose_name="Пользователь"
@@ -27,18 +31,27 @@ class PaymentHistory(models.Model):
         verbose_name="Подписка",
     )
     payment_method = models.TextField(
-        "Способ оплаты подписки",
         choices=PaymentMethodChoises.choices,
         default=PaymentMethodChoises.CREDIT_CARD,
-        max_length=155,
+        max_length=20,
+        verbose_name="Способ оплаты подписки",
     )
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name="Количество",
     )
-    date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=155)
+    date = models.DateField(
+        auto_now_add=True,
+        verbose_name="Способ оплаты подписки"
+    )
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default="payment_completed",
+        blank=True,
+        verbose_name="Статус оплаты подписки",
+    )
 
     class Meta:
         verbose_name = "История оплаты подписки"
@@ -46,13 +59,40 @@ class PaymentHistory(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return str(self.subscription)
+        return (f"Текущая Подписка {self.subscription} "
+                f"и статус оплаты: {self.get_status_display()}")
+
+
+class SubscriptionPayment(models.Model):
+    """
+    Модель для связи между подпиской и историей оплаты.
+    """
+
+    subscription = models.ForeignKey(
+        Subscription,
+        on_delete=models.CASCADE,
+        verbose_name="Подписка",
+        related_name="payments",
+    )
+    payment_history = models.ForeignKey(
+        PaymentHistory,
+        on_delete=models.CASCADE,
+        verbose_name="История оплаты",
+        related_name="subscription_payments",
+    )
+
+    class Meta:
+        verbose_name = "Подписка и оплата"
+        verbose_name_plural = "Подписки и оплаты"
+
+    def __str__(self):
+        return f"{self.payment_history}"
 
 
 class Cashback(models.Model):
-    """Модель получения кэшбека."""
-
-    objects = None
+    """
+    Модель получения кэшбека.
+    """
 
     class CashbackType(models.TextChoices):
         """
@@ -61,6 +101,11 @@ class Cashback(models.Model):
 
         FIXED_AMOUNT = "fixed_amount", "Фиксированная сумма"
         PERCENTAGE = "percentage", "Процент от суммы платежа"
+
+    STATUS_CASHBACK = (
+        ("cashback_completed", "Кешбэк получен"),
+        ("cashback_not_received", "Кешбэк не получен"),
+    )
 
     subscription_service = models.OneToOneField(
         Services, on_delete=models.CASCADE, verbose_name="Сервис подписки"
@@ -78,7 +123,11 @@ class Cashback(models.Model):
         default=CashbackType.FIXED_AMOUNT,
         max_length=155,
     )
-    status = models.CharField(max_length=100, verbose_name="Статус кэшбека")
+    status = models.CharField(
+        max_length=100,
+        choices=STATUS_CASHBACK,
+        default="cashback_not_received",
+        verbose_name="Статус получения кэшбека")
 
     class Meta:
         verbose_name = "Кэшбек"
