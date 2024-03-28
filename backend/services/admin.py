@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from users.models import MyUser
 
-from .models import Category, Services, Subscription
+from .models import Category, Services, Subscription, TariffList
 
 
 class CategoryServicesInline(admin.TabularInline):
@@ -13,10 +12,10 @@ class CategoryServicesInline(admin.TabularInline):
     extra = 0
 
 
-class MyUserServicesInline(admin.TabularInline):
-    """Таблица отношений User - Services."""
+class TariffListInline(admin.TabularInline):
+    """Таблица отношений TariffList - Services."""
 
-    model = MyUser
+    model = TariffList
     min_num = 0
     extra = 0
 
@@ -30,10 +29,12 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
+        "slug",
         "description",
         "icon",
         "display_icon",  # Добавляем метод display_icon в list_display
     )
+    prepopulated_fields = {'slug': ('name',)}
     list_display_links = ("id", "name")
     search_fields = ("name",)
 
@@ -53,25 +54,23 @@ class CategoryAdmin(admin.ModelAdmin):
 class ServicesAdmin(admin.ModelAdmin):
     """Настроенная панель админки (управление подписками)."""
 
-    #    inlines = (MyUserServicesInline,)
+    inlines = (TariffListInline,)
 
     list_display = (
         "id",
         "name",
         "category",
-        "services_duration",
-        "cost",
-        "subscription_type",
+        "link",
+        "description",
+        "icon",
     )
     list_display_links = ("id", "name")
-    search_fields = ("category",)
+    search_fields = ("category__name",)
 
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
     """Настроенная панель админки (управление подписками)."""
-
-    #    inlines = (MyUserServicesInline,)
 
     list_display = (
         "id",
@@ -82,4 +81,21 @@ class SubscriptionAdmin(admin.ModelAdmin):
         "status",
     )
     list_display_links = ("id",)
-    search_fields = ("category", "user")
+    search_fields = ("service__name", "user")
+
+
+@admin.register(TariffList)
+class TariffListAdmin(admin.ModelAdmin):
+    """Настроенная панель админки (тарифы к сервисам)."""
+
+    list_display = (
+        "id",
+        "name",
+        "description",
+        "services",
+        "services_duration",
+        "tariff_full_price",
+        "tariff_promo_price",
+    )
+    list_display_links = ("id",)
+    search_fields = ("services__name", "services_duration")
