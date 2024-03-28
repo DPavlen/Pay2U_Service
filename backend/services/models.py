@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.text import slugify
 from rest_framework.exceptions import PermissionDenied
 
 User = get_user_model()
@@ -10,16 +11,18 @@ class Category(models.Model):
     Класс для категории.
 
     name - название категории
+    slug - адрес категории
     description - описание категория
     icon - картинка категории
 
     """
 
-    name = models.CharField(max_length=20, verbose_name="название")
-    description = models.CharField(max_length=250, verbose_name="описание")
+    name = models.CharField(max_length=20, verbose_name="название категории")
+    slug = models.SlugField(max_length=255, unique=True,)
+    description = models.CharField(max_length=250, verbose_name="описание категории")
     icon = models.ImageField(
         verbose_name="Фото категории",
-        upload_to="services/images/",
+        upload_to="category/images/",
         default=None,
         blank=True,
     )
@@ -31,37 +34,33 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(**kwargs)
+
 
 class Services(models.Model):
     """
     Класс для сервиса.
-
     name - название сервиса
     category - категория сервиса
-    services_duration - длительность подписки на сервис
-    cost - стоимость за 1 месяц
-    subscription_type - тип подписки.
+    link - ссылка на сервис на сервис
+    description - описание сервиса
+    icon - иконка категории
     """
-
-    class Duration(models.TextChoices):
-        ONE_MONTH = "one_month", "Один месяц"
-        THREE_MONTHS = "three_months", "Три месяца"
-        SIX_MONTHS = "six_months", "Шесть месяцев"
-        ONE_YEAR = "one_year", "Один год"
 
     name = models.CharField(max_length=250, verbose_name="название")
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
     )
-    services_duration = models.CharField(
-        max_length=20,
-        choices=Duration.choices,
-        verbose_name="длительность подписки",
-        default=Duration.ONE_MONTH,
-    )
-    cost = models.FloatField(verbose_name="стоимость одного месяца")
-    subscription_type = models.CharField(
-        max_length=250, verbose_name="тип подписки", null=True, blank=True
+    link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
+    description = models.CharField(max_length=250, verbose_name="описание")
+    icon = models.ImageField(
+        verbose_name="Фото сервиса",
+        upload_to="services/images/",
+        default=None,
+        blank=True,
     )
 
     class Meta:
@@ -77,8 +76,37 @@ class Services(models.Model):
             user=user, service=self
         )
         if not created:
-            raise PermissionDenied({"detail": "Already enrolled."})
+            raise PermissionDenied({"detail": "Already subscribe."})
         return subscription
+
+
+class TariffList(models.Model):
+
+    class Duration(models.TextChoices):
+        ONE_MONTH = "one_month", "Один месяц"
+        THREE_MONTHS = "three_months", "Три месяца"
+        SIX_MONTHS = "six_months", "Шесть месяцев"
+        ONE_YEAR = "one_year", "Один год"
+    name = models.CharField(max_length=250, verbose_name="название тарифа")
+    description = models.CharField(max_length=250, verbose_name="описание тарифа")
+    services = models.ForeignKey(
+        Services, on_delete=models.CASCADE, verbose_name="сервис", related_name="tarifflists"
+    )
+    services_duration = models.CharField(
+        max_length=20,
+        choices=Duration.choices,
+        verbose_name="длительность тарифа",
+        default=Duration.ONE_MONTH,
+    )
+    tariff_full_price = models.FloatField(verbose_name="полная стоимость тарифа")
+    tariff_promo_price = models.FloatField(verbose_name="промо стоимость тарифа")
+
+    class Meta:
+        verbose_name = "Тариф"
+        verbose_name_plural = "Тарифы"
+
+    def __str__(self):
+        return self.name
 
 
 class Subscription(models.Model):

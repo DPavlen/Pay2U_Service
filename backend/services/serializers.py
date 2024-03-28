@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
-from .models import Category, Services, Subscription
+from .models import Category, Services, Subscription, TariffList
 
 User = get_user_model()
 
@@ -25,6 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
     icon = Base64ImageField(
         required=False,
     )
+    slug = serializers.SlugField(read_only=True)
 
     class Meta:
         fields = "__all__"
@@ -33,14 +34,22 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
+
+    class Meta:
+        fields = "__all__"
+        model = Services
+
+
+class TariffListSerializer(serializers.ModelSerializer):
+    services = ServicesSerializer()
     services_duration = serializers.ChoiceField(
-        default=Services.Duration.ONE_MONTH, choices=Services.Duration
+        default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
     )
     cost = serializers.SerializerMethodField
 
     class Meta:
         fields = "__all__"
-        model = Services
+        model = TariffList
 
 
 class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
