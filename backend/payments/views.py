@@ -1,12 +1,12 @@
-from payments.models import Cashback, PaymentHistory, SubscriptionPayment
-from payments.serializers import CashbackSerializer, PaymentHistorySerializer, SubscriptionPaymentSerializer
+from payments.models import Cashback, PaymentMethods, SubscriptionPayment
+from payments.serializers import CashbackSerializer, PaymentMethodsSerializer, SubscriptionPaymentSerializer
 from rest_framework import viewsets
 
 # from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 
 
-class PaymentHistoryViewSet(viewsets.ModelViewSet):
+class PaymentMethodsViewSet(viewsets.ModelViewSet):
     """
     Основная View об историях оплат подписок.
     Attributes:
@@ -16,8 +16,8 @@ class PaymentHistoryViewSet(viewsets.ModelViewSet):
         - pagination_class: Стандартный класс пагинации.
     """
 
-    queryset = PaymentHistory.objects.all()
-    serializer_class = PaymentHistorySerializer
+    queryset = PaymentMethods.objects.all()
+    serializer_class = PaymentMethodsSerializer
     permission_classes = (AllowAny,)
     # pagination_class = LimitOffsetPagination
 
