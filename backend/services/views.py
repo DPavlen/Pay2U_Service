@@ -7,8 +7,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Category, Services, Subscription
-from .serializers import CategorySerializer, ServicesSerializer, UserSubscriptionServiceSerializer
+from .models import Category, Services, Subscription, TariffList
+from .serializers import CategorySerializer, ServicesSerializer, TariffListSerializer, UserSubscriptionServiceSerializer
 
 
 class CategoriesViewSetViewSet(viewsets.ModelViewSet):
@@ -27,7 +27,7 @@ class CategoriesViewSetViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], permission_classes=(IsAuthenticated,))
     def services(self, request, **kwargs):
         """
-        Показать все категории сервиса.
+        Показать все сервисаы категории .
         """
         try:
             services = Services.objects.filter(
@@ -48,7 +48,9 @@ class ServicesViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         responses={
             status.HTTP_201_CREATED: "Подписка добавлена.",
-        }
+        },
+        query_serializer=None,
+        operation_description="передай в query_params duration--> 1,3,6,12"
     )
     @action(detail=True, methods=["post"], permission_classes=(IsAuthenticated,))
     def add(self, request, **kwargs):
@@ -56,10 +58,11 @@ class ServicesViewSet(viewsets.ModelViewSet):
         Добавить новую подписку пользователю.
         """
         user = self.request.user
-        services = get_object_or_404(Services, **kwargs)
-        subscription = services.subscribe(user)
+        duration = self.request.query_params.get('duration')
+        tariff = get_object_or_404(TariffList, services=get_object_or_404(Services, **kwargs), services_duration=duration)
+        subscription = tariff.subscribe(user)
         serializer = UserSubscriptionServiceSerializer(
-            subscription, context={"services": services}
+            subscription, context={"tariff": tariff}
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -71,18 +74,37 @@ class ServicesViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"], permission_classes=(IsAuthenticated,))
     def disable(self, request, **kwargs):
         """
-        Отписать пользователя от участия в данном курсе.
+        Отключить подписку.
         """
         user = self.request.user
-        service = get_object_or_404(Services, **kwargs)
+        tariff = get_object_or_404(TariffList, services=get_object_or_404(Services, **kwargs), subscriptions__user=self.request.user)
         subscription = get_object_or_404(
             Subscription,
             user=user,
-            service=service,
-            status=Subscription.Status.SUBSCRIBED,
+            tariff=tariff,
+            is_active=True,
         )
         subscription.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @swagger_auto_schema(
+        responses={
+            status.HTTP_200_OK: "Получить тарифные планы.",
+        }
+    )
+    @action(detail=True, methods=["get"], permission_classes=(IsAuthenticated,))
+    def tariff(self, request, **kwargs):
+        """
+        Показать все тарифы сервиса.
+        """
+        try:
+            tariff = TariffList.objects.filter(
+                services=Services.objects.get(id=kwargs.get("pk"))
+            )
+        except TariffList.DoesNotExist:
+            raise Http404
+        serializer = TariffListSerializer(tariff, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SubscriptionServiceViewSet(viewsets.ModelViewSet):

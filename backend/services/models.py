@@ -1,7 +1,13 @@
+import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils.text import slugify
 from rest_framework.exceptions import PermissionDenied
+from transliterate import translit
+
+from .exceptions import BadRequestException
 
 User = get_user_model()
 
@@ -36,8 +42,11 @@ class Category(models.Model):
 
     def save(self, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
-        super(Category, self).save(**kwargs)
+            self.slug = slugify(translit(self.name, "ru", reversed=True))
+        try:
+            super(Category, self).save(**kwargs)
+        except IntegrityError:
+            raise BadRequestException
 
 
 class Services(models.Model):
@@ -70,23 +79,14 @@ class Services(models.Model):
     def __str__(self):
         return self.name
 
-    def subscribe(self, user):
-        """Подписаться на сервис."""
-        subscription, created = Subscription.objects.get_or_create(
-            user=user, service=self
-        )
-        if not created:
-            raise PermissionDenied({"detail": "Already subscribe."})
-        return subscription
-
 
 class TariffList(models.Model):
 
     class Duration(models.TextChoices):
-        ONE_MONTH = "one_month", "Один месяц"
-        THREE_MONTHS = "three_months", "Три месяца"
-        SIX_MONTHS = "six_months", "Шесть месяцев"
-        ONE_YEAR = "one_year", "Один год"
+        ONE_MONTH = "1", "Один месяц"
+        THREE_MONTHS = "3", "Три месяца"
+        SIX_MONTHS = "6", "Шесть месяцев"
+        ONE_YEAR = "12", "Один год"
     name = models.CharField(max_length=250, verbose_name="название тарифа")
     description = models.CharField(max_length=250, verbose_name="описание тарифа")
     services = models.ForeignKey(
@@ -106,7 +106,16 @@ class TariffList(models.Model):
         verbose_name_plural = "Тарифы"
 
     def __str__(self):
-        return self.name
+        return (f"{self.services} длительностью {self.services_duration}")
+
+    def subscribe(self, user):
+        """Подписаться на сервис."""
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, tariff=self
+        )
+        if not created:
+            raise PermissionDenied({"detail": "Already subscribe."})
+        return subscription
 
 
 class Subscription(models.Model):
@@ -128,19 +137,14 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="subscriptions"
     )
-    service = models.ForeignKey(Services, on_delete=models.PROTECT, related_name="+")
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        verbose_name="статус подписки",
-        default=Status.SUBSCRIBED,
-    )
+    tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
+    is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "service"],
-                name="unique_user_service",
+                fields=["user", "tariff"],
+                name="unique_user_tariff",
             ),
         ]
 
@@ -150,8 +154,16 @@ class Subscription(models.Model):
 
     def __str__(self):
         return (f"Пользователь: {self.user.username}, "
-                f" на сервис: '{self.service.name}' "
-                f" {self.get_status_display()}")
+                f" на сервис: '{self.tariff.services}' ")
+
+    def check_subscription(self):
+        date = datetime.date.today()
+        end_date = self.updated_at.date() + relativedelta(months=+int(self.tariff.services_duration))
+        if end_date < date:
+            self.is_active = False
+            return self
+        self.is_active = True
+        return self
 
 
 class SubscriptionPayment(models.Model):

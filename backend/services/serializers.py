@@ -45,7 +45,6 @@ class TariffListSerializer(serializers.ModelSerializer):
     services_duration = serializers.ChoiceField(
         default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
     )
-    cost = serializers.SerializerMethodField
 
     class Meta:
         fields = "__all__"

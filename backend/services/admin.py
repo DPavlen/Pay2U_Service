@@ -77,8 +77,8 @@ class SubscriptionAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
         "user",
-        "service",
-        "status",
+        "tariff",
+        "is_active",
     )
     list_display_links = ("id",)
     search_fields = ("service__name", "user")
