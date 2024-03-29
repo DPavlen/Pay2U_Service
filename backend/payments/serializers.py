@@ -1,14 +1,14 @@
-from payments.models import Cashback, PaymentHistory, SubscriptionPayment
+from payments.models import Cashback, PaymentMethods, SubscriptionPayment
 from rest_framework import serializers
 
 
-class PaymentHistorySerializer(serializers.ModelSerializer):
+class PaymentMethodsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для истории оплаты подписки.
     """
 
     class Meta:
-        model = PaymentHistory
+        model = PaymentMethods
         fields = (
             "id",
             "user",
