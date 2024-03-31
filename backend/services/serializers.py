@@ -36,8 +36,17 @@ class ServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
 
     class Meta:
-        fields = "__all__"
         model = Services
+        fields = (
+            "name",
+            "category",
+            "link",
+            "description",
+            "icon_big",
+            "icon_square",
+            "icon_small",
+            "is_popular",
+        )
 
 
 class TariffListSerializer(serializers.ModelSerializer):

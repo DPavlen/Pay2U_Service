@@ -1,0 +1,83 @@
+[
+  {
+    "name": "Подписка на 1 месяц",
+    "description": "Подписка на 1 месяц",
+    "services_duration": "1",
+    "tariff_full_price": "99",
+    "tariff_promo_price": "90"
+  },
+
+  {
+    "name": "Подписка на 3 месяца",
+    "description": "Подписка на квартал",
+    "services_duration": "3",
+    "tariff_full_price": "199",
+    "tariff_promo_price": "169"
+  },
+
+  {
+    "name": "Подписка на 6 месяцев",
+    "description": "Подписка на полгода",
+    "services_duration": "6",
+    "tariff_full_price": "399",
+    "tariff_promo_price": "369"
+  },
+
+  {
+    "name": "Прайм",
+    "description": "Прайм",
+    "services_duration": "1",
+    "tariff_full_price": "199",
+    "tariff_promo_price": "169"
+  },
+
+  {
+    "name": "Прайм+Премимум",
+    "description": "Прайм+Премимум",
+    "services_duration": "1",
+    "tariff_full_price": "799",
+    "tariff_promo_price": "669"
+  },
+
+  {
+    "name": "Подписка на 12 месяцев",
+    "description": "Подписка на 1 год",
+    "services_duration": "12",
+    "tariff_full_price": "2390",
+    "tariff_promo_price": "2000"
+  },
+
+  {
+    "name": "Годовая подписка",
+    "description": "Подписка на 1 год",
+    "services_duration": "12",
+    "tariff_full_price": "1999",
+    "tariff_promo_price": "1899"
+  },
+
+  {
+    "name": "Пробная подписка",
+    "description": "Пробная подписка",
+    "services_duration": "1",
+    "tariff_full_price": "299",
+    "tariff_promo_price": "199"
+  },
+
+  {
+    "name": "Подписка на 6 месяцев",
+    "description": "Подписка на 6 месяцев",
+    "services_duration": "6",
+    "tariff_full_price": "899",
+    "tariff_promo_price": "799"
+  },
+
+  {
+    "name": "Подписка на 3 месяца",
+    "description": "Подписка на 6 месяцев",
+    "services_duration": "3",
+    "tariff_full_price": "299",
+    "tariff_promo_price": "299"
+  }
+]
+
+
