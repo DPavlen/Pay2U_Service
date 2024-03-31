@@ -64,12 +64,29 @@ class Services(models.Model):
         Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
     )
     link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
-    description = models.CharField(max_length=250, verbose_name="описание")
-    icon = models.ImageField(
-        verbose_name="Фото сервиса",
+    description = models.TextField(verbose_name="описание")
+    icon_big = models.ImageField(
+        verbose_name="Иконка сервиса большая",
         upload_to="services/images/",
         default=None,
         blank=True,
+    )
+    icon_square = models.ImageField(
+        verbose_name="Иконка сервиса квадратная",
+        upload_to="services/images/",
+        default=None,
+        blank=True,
+    )
+    icon_small = models.ImageField(
+        verbose_name="Иконка сервиса маленькая",
+        upload_to="services/images/",
+        default=None,
+        blank=True,
+    )
+    is_popular = models.BooleanField(
+        max_length=250,
+        default=False,
+        verbose_name="Популярность сервиса"
     )
 
     class Meta:
@@ -90,7 +107,10 @@ class TariffList(models.Model):
     name = models.CharField(max_length=250, verbose_name="название тарифа")
     description = models.CharField(max_length=250, verbose_name="описание тарифа")
     services = models.ForeignKey(
-        Services, on_delete=models.CASCADE, verbose_name="сервис", related_name="tarifflists"
+        Services,
+        on_delete=models.CASCADE,
+        verbose_name="сервис",
+        related_name="tarifflists"
     )
     services_duration = models.CharField(
         max_length=20,

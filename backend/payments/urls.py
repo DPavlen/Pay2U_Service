@@ -1,11 +1,11 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import CashbackViewSet, PaymentHistoryViewSet
+from .views import CashbackViewSet, PaymentMethodsViewSet
 
 router = DefaultRouter()
 
-router.register(r"paymenthistory", PaymentHistoryViewSet, basename="paymenthistory")
+router.register(r"paymentmethods", PaymentMethodsViewSet, basename="paymentmethods")
 router.register(r" cashback", CashbackViewSet, basename=" cashback")
 
 
