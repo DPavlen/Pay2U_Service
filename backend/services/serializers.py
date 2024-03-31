@@ -57,6 +57,7 @@ class ServicesSerializer(serializers.ModelSerializer):
             "icon_square",
             "icon_small",
             "is_popular",
+            "tariff"
         )
 
     def get_tariff(self, obj):

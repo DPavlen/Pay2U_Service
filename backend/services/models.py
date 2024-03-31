@@ -69,20 +69,19 @@ class Services(models.Model):
     icon_big = models.ImageField(
         verbose_name="Фото сервиса большое",
         upload_to="services/images/big/",
-        default=None,
         blank=True,
         null=True,
     )
     icon_square = models.ImageField(
         verbose_name="Фото сервиса",
         upload_to="services/images/square/",
-        default=None,
+        blank=True,
         null=True,
     )
     icon_small = models.ImageField(
         verbose_name="Фото сервиса",
         upload_to="services/images/small/",
-        default=None,
+        blank=True,
         null=True,
     )
 

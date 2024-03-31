@@ -121,6 +121,20 @@ class ServicesViewSet(viewsets.ModelViewSet):
         serializer = ShortTariffListSerializer(tariff, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        responses={
+            status.HTTP_200_OK: "Получить популярные сервисы.",
+        }
+    )
+    @action(detail=False, methods=["get"], permission_classes=(IsAuthenticated,))
+    def popular(self, request, **kwargs):
+        """
+        Показать все популярные сервисы у которых is_popular=True.
+        """
+        popular_services = self.queryset.filter(is_popular=True)
+        serializer = self.get_serializer(popular_services, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class SubscriptionServiceViewSet(viewsets.ModelViewSet):
     """
