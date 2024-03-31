@@ -11,10 +11,10 @@ class FaqSerializer(serializers.ModelSerializer):
         model = Faq
         fields = (
             "id",
+            "topic_question",
             "question",
             "answer",
             "created",
             "updated",
-            "author",
         )
         read_only_fields = ("__all__",)
