@@ -63,6 +63,8 @@ class ServicesAdmin(admin.ModelAdmin):
         "link",
         "description",
         "icon_big",
+        "icon_square",
+        "icon_small",
         "is_popular",
     )
     list_display_links = ("id", "name")

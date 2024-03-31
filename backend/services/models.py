@@ -61,35 +61,28 @@ class Services(models.Model):
 
     name = models.CharField(max_length=250, verbose_name="название")
     category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        verbose_name="категория",
-        null=True
+        Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
     )
     link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
-    description = models.TextField(verbose_name="описание")
+    description = models.CharField(max_length=250, verbose_name="описание")
+    is_popular = models.BooleanField(default=False, verbose_name="Популярный сервис?")
     icon_big = models.ImageField(
-        verbose_name="Иконка сервиса большая",
-        upload_to="services/images/",
-        default=None,
+        verbose_name="Фото сервиса большое",
+        upload_to="services/images/big/",
         blank=True,
+        null=True,
     )
     icon_square = models.ImageField(
-        verbose_name="Иконка сервиса квадратная",
-        upload_to="services/images/",
-        default=None,
+        verbose_name="Фото сервиса",
+        upload_to="services/images/square/",
         blank=True,
+        null=True,
     )
     icon_small = models.ImageField(
-        verbose_name="Иконка сервиса маленькая",
-        upload_to="services/images/",
-        default=None,
+        verbose_name="Фото сервиса",
+        upload_to="services/images/small/",
         blank=True,
-    )
-    is_popular = models.BooleanField(
-        max_length=250,
-        default=False,
-        verbose_name="Популярность сервиса"
+        null=True,
     )
 
     class Meta:
@@ -110,11 +103,7 @@ class TariffList(models.Model):
     name = models.CharField(max_length=250, verbose_name="название тарифа")
     description = models.CharField(max_length=250, verbose_name="описание тарифа")
     services = models.ForeignKey(
-        Services,
-        on_delete=models.SET_NULL,
-        verbose_name="сервис",
-        related_name="tarifflists",
-        null=True
+        Services, on_delete=models.CASCADE, verbose_name="сервис", related_name="tarifflists"
     )
     services_duration = models.CharField(
         max_length=20,
@@ -130,7 +119,6 @@ class TariffList(models.Model):
         verbose_name_plural = "Тарифы"
 
     def __str__(self):
-
         return (f"{self.services} длительностью {self.services_duration}")
 
     def subscribe(self, user):
@@ -160,17 +148,10 @@ class Subscription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name="subscriptions"
+        User, on_delete=models.PROTECT, related_name="subscriptions"
     )
-    tariff = models.ForeignKey(
-        TariffList,
-        on_delete=models.PROTECT,
-        related_name="subscriptions")
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="Подписка активна?")
+    tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
+    is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
 
     class Meta:
         constraints = [
@@ -186,16 +167,16 @@ class Subscription(models.Model):
 
     def __str__(self):
         return (f"Пользователь: {self.user.username}, "
-                f" на сервис: '{self.tariff.services}'")
+                f" на сервис: '{self.tariff.services}' ")
 
     def check_subscription(self):
         date = datetime.date.today()
         end_date = self.updated_at.date() + relativedelta(months=+int(self.tariff.services_duration))
         if end_date < date:
             self.is_active = False
-            return self
+            return end_date
         self.is_active = True
-        return self
+        return end_date
 
 
 class SubscriptionPayment(models.Model):

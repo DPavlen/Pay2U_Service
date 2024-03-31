@@ -32,8 +32,19 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
 
 
+class ShortCategorySerializer(serializers.ModelSerializer):
+
+    slug = serializers.SlugField(read_only=True)
+
+    class Meta:
+        fields = ("name", "slug")
+        model = Category
+
+
 class ServicesSerializer(serializers.ModelSerializer):
+
     category = CategorySerializer()
+    tariff = serializers.SerializerMethodField()
 
     class Meta:
         model = Services
@@ -46,17 +57,39 @@ class ServicesSerializer(serializers.ModelSerializer):
             "icon_square",
             "icon_small",
             "is_popular",
+            "tariff"
         )
+
+    def get_tariff(self, obj):
+        return TariffListSerializer(obj.tarifflists.all(), many=True).data
+
+
+class ShortServicesSerializer(serializers.ModelSerializer):
+    category = ShortCategorySerializer()
+
+    class Meta:
+        fields = ("name", "category")
+        model = Services
 
 
 class TariffListSerializer(serializers.ModelSerializer):
-    services = ServicesSerializer()
     services_duration = serializers.ChoiceField(
         default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
     )
 
     class Meta:
         fields = "__all__"
+        model = TariffList
+
+
+class ShortTariffListSerializer(serializers.ModelSerializer):
+    services = ShortServicesSerializer()
+    services_duration = serializers.ChoiceField(
+        default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
+    )
+
+    class Meta:
+        fields = ("id", "services_duration", "services")
         model = TariffList
 
 
