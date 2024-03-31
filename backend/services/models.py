@@ -65,11 +65,25 @@ class Services(models.Model):
     )
     link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
     description = models.CharField(max_length=250, verbose_name="описание")
-    icon = models.ImageField(
-        verbose_name="Фото сервиса",
-        upload_to="services/images/",
+    is_popular = models.BooleanField(default=False, verbose_name="Популярный сервис?")
+    icon_big = models.ImageField(
+        verbose_name="Фото сервиса большое",
+        upload_to="services/images/big/",
         default=None,
         blank=True,
+        null=True,
+    )
+    icon_square = models.ImageField(
+        verbose_name="Фото сервиса",
+        upload_to="services/images/square/",
+        default=None,
+        null=True,
+    )
+    icon_small = models.ImageField(
+        verbose_name="Фото сервиса",
+        upload_to="services/images/small/",
+        default=None,
+        null=True,
     )
 
     class Meta:
@@ -161,9 +175,9 @@ class Subscription(models.Model):
         end_date = self.updated_at.date() + relativedelta(months=+int(self.tariff.services_duration))
         if end_date < date:
             self.is_active = False
-            return self
+            return end_date
         self.is_active = True
-        return self
+        return end_date
 
 
 class SubscriptionPayment(models.Model):

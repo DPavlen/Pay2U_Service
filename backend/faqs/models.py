@@ -10,12 +10,22 @@ class Faq(models.Model):
     answer - ответ на заданный вопрос
     created - дата создания вопроса
     updated - дата обновленя вопроса
-    author - пользователь, создавший вопрос/ответ.
+    сategory - категория к кторой относится вопрос.
     """
+
+    class Category(models.TextChoices):
+        REGISTRATION = "registration", "Оформление"
+        CONNECTION = "connection", "Подключение"
+        WORK_WITH_SUBSCRIPTIONS = "work_with_subscriptions", "Работа с подписками"
 
     topic_question = models.CharField(
         max_length=250,
         verbose_name="Тема вопроса"
+    )
+    сategory = models.CharField(
+        max_length=25,
+        choices=Category.choices,
+        verbose_name="категория вопроса",
     )
     question = models.CharField(
         max_length=250,

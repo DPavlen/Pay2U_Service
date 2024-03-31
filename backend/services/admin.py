@@ -62,7 +62,9 @@ class ServicesAdmin(admin.ModelAdmin):
         "category",
         "link",
         "description",
-        "icon",
+        "icon_big",
+        "icon_square",
+        "icon_small",
     )
     list_display_links = ("id", "name")
     search_fields = ("category__name",)
