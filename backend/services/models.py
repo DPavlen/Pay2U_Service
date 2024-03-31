@@ -61,7 +61,10 @@ class Services(models.Model):
 
     name = models.CharField(max_length=250, verbose_name="название")
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
+        Category,
+        on_delete=models.SET_NULL,
+        verbose_name="категория",
+        null=True
     )
     link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
     description = models.TextField(verbose_name="описание")
@@ -108,9 +111,10 @@ class TariffList(models.Model):
     description = models.CharField(max_length=250, verbose_name="описание тарифа")
     services = models.ForeignKey(
         Services,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="сервис",
-        related_name="tarifflists"
+        related_name="tarifflists",
+        null=True
     )
     services_duration = models.CharField(
         max_length=20,
@@ -126,6 +130,7 @@ class TariffList(models.Model):
         verbose_name_plural = "Тарифы"
 
     def __str__(self):
+
         return (f"{self.services} длительностью {self.services_duration}")
 
     def subscribe(self, user):
@@ -155,10 +160,17 @@ class Subscription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="subscriptions"
+        User,
+        on_delete=models.PROTECT,
+        related_name="subscriptions"
     )
-    tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
-    is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
+    tariff = models.ForeignKey(
+        TariffList,
+        on_delete=models.PROTECT,
+        related_name="subscriptions")
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Подписка активна?")
 
     class Meta:
         constraints = [
@@ -174,7 +186,7 @@ class Subscription(models.Model):
 
     def __str__(self):
         return (f"Пользователь: {self.user.username}, "
-                f" на сервис: '{self.tariff.services}' ")
+                f" на сервис: '{self.tariff.services}'")
 
     def check_subscription(self):
         date = datetime.date.today()

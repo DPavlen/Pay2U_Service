@@ -14,7 +14,7 @@ class Command(BaseCommand):
                     link = service.get("link")
                     description = service.get("description")
                     is_popular = service.get("is_popular", "FALSE").upper() == "TRUE"
-                    Services.objects.create(
+                    Services.objects.get_or_create(
                         name=name,
                         link=link,
                         description=description,
