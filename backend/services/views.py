@@ -52,7 +52,7 @@ class ServicesViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ServicesFilter
-    filterset_fields = ("name", "category_name")
+    filterset_fields = ("name", "category__name", "is_popular")
     pagination_class = LimitOffsetPagination
 
     @swagger_auto_schema(

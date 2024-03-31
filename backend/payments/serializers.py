@@ -14,9 +14,6 @@ class PaymentMethodsSerializer(serializers.ModelSerializer):
             "user",
             "subscription",
             "payment_method",
-            "amount",
-            "date",
-            "status",
         )
         # read_only_fields = ("__all__",)
 
@@ -24,7 +21,16 @@ class PaymentMethodsSerializer(serializers.ModelSerializer):
 class SubscriptionPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubscriptionPayment
-        fields = ['id', 'subscription', 'payment_history']
+        fields = (
+            "id",
+            "subscription",
+            "payment_methods",
+            "cost",
+            "date",
+            "status",
+
+
+        )
 
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)
@@ -43,9 +49,9 @@ class CashbackSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "subscription_service",
-            "payment",
+            "payment_methods",
+            "description",
             "amount",
             "type_cashback",
             "status",
-            "description",
         )

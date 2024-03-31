@@ -31,6 +31,8 @@ class PaymentMethods(models.Model):
         max_length=20,
         verbose_name="Способ оплаты подписки",
     )
+    # priorityMethod: true,
+    # methodIcon: paymentMethodLogo1,
 
     class Meta:
         verbose_name = "Метод оплаты подписки"
@@ -46,6 +48,7 @@ class SubscriptionPayment(models.Model):
     Модель для связи между подпиской и оплатой.
     """
 
+    # добавить тариф
     STATUS_CHOICES = (
         ("payment_completed", "Оплата прошла"),
         ("not_paid", "Не оплачено"),

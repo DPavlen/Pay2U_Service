@@ -11,6 +11,7 @@ class FaqAdmin(admin.ModelAdmin):
         "answer",
         "created",
         "updated",
+        "сategory",
     )
     list_filter = ("topic_question", "question", "answer", "created",)
     search_fields = ("topic_question", "question",)

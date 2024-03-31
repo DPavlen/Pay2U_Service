@@ -47,8 +47,17 @@ class ServicesSerializer(serializers.ModelSerializer):
     tariff = serializers.SerializerMethodField()
 
     class Meta:
-        fields = "__all__"
         model = Services
+        fields = (
+            "name",
+            "category",
+            "link",
+            "description",
+            "icon_big",
+            "icon_square",
+            "icon_small",
+            "is_popular",
+        )
 
     def get_tariff(self, obj):
         return TariffListSerializer(obj.tarifflists.all(), many=True).data
