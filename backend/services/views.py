@@ -131,7 +131,7 @@ class ServicesViewSet(viewsets.ModelViewSet):
         """
         Показать все популярные сервисы у которых is_popular=True.
         """
-        popular_services = self.queryset.filter(is_popular=True)
+        popular_services = self.queryset.filter(is_popular=True)[:20]
         serializer = self.get_serializer(popular_services, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

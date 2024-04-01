@@ -103,7 +103,11 @@ class TariffList(models.Model):
     name = models.CharField(max_length=250, verbose_name="название тарифа")
     description = models.CharField(max_length=250, verbose_name="описание тарифа")
     services = models.ForeignKey(
-        Services, on_delete=models.CASCADE, verbose_name="сервис", related_name="tarifflists"
+        Services,
+        on_delete=models.SET_NULL,
+        verbose_name="сервис",
+        null=True,
+        related_name="tarifflists"
     )
     services_duration = models.CharField(
         max_length=20,
