@@ -73,13 +73,13 @@ class Services(models.Model):
         null=True,
     )
     icon_square = models.ImageField(
-        verbose_name="Фото сервиса",
+        verbose_name="Фото сервиса среднее",
         upload_to="services/images/square/",
         blank=True,
         null=True,
     )
     icon_small = models.ImageField(
-        verbose_name="Фото сервиса",
+        verbose_name="Фото сервиса маленькое",
         upload_to="services/images/small/",
         blank=True,
         null=True,

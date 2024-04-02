@@ -143,8 +143,11 @@ class SubscriptionServiceViewSet(viewsets.ModelViewSet):
 
     queryset = Subscription.objects.all()
     serializer_class = UserSubscriptionServiceSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     pagination_class = LimitOffsetPagination
+
+    def get_queryset(self):
+        return self.request.user.subscriptions.all()
 
     @swagger_auto_schema(
         responses={
