@@ -95,6 +95,7 @@ class ShortTariffListSerializer(serializers.ModelSerializer):
 
 
 class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
+    tariff = TariffListSerializer()
 
     class Meta:
         fields = "__all__"
