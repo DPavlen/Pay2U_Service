@@ -64,7 +64,7 @@ class Services(models.Model):
         Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
     )
     link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
-    description = models.CharField(max_length=250, verbose_name="описание")
+    description = models.TextField(verbose_name="описание")
     is_popular = models.BooleanField(default=False, verbose_name="Популярный сервис?")
     icon_big = models.ImageField(
         verbose_name="Фото сервиса большое",

@@ -147,6 +147,7 @@ class UserCashback(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Платеж подписки")
     description = models.TextField(
+        blank=True,
         verbose_name="Текст кэшбека")
     amount = models.DecimalField(
         max_digits=10,
