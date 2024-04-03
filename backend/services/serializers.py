@@ -69,7 +69,7 @@ class ShortServicesSerializer(serializers.ModelSerializer):
     category = ShortCategorySerializer()
 
     class Meta:
-        fields = ("name", "category")
+        fields = ("id", "name", "category", "link", "is_popular", "icon_big", "icon_square", "icon_small",)
         model = Services
 
 
@@ -77,6 +77,7 @@ class TariffListSerializer(serializers.ModelSerializer):
     services_duration = serializers.ChoiceField(
         default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
     )
+    services = ShortServicesSerializer()
 
     class Meta:
         fields = "__all__"
