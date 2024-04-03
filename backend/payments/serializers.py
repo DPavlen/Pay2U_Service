@@ -1,4 +1,4 @@
-from payments.models import Cashback, PaymentMethods, SubscriptionPayment
+from payments.models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCashback
 from rest_framework import serializers
 
 
@@ -32,26 +32,34 @@ class SubscriptionPaymentSerializer(serializers.ModelSerializer):
 
         )
 
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['subscription'] = instance.subscription.service
-    #     representation['payment_history'] = instance.payment_history.id
-    #     return representation
 
-
-class CashbackSerializer(serializers.ModelSerializer):
+class ServiceCashbackSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для  получения кэшбека.
+    Сериализатор для  сервиса кэшбека.
     """
 
     class Meta:
-        model = Cashback
+        model = ServiceCashback
         fields = (
             "id",
             "subscription_service",
-            "payment_methods",
+            "type_cashback",
+        )
+
+
+class UserCashbackSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для кэшбэка пользователя.
+    """
+
+    class Meta:
+        model = UserCashback
+        fields = (
+            "id",
+            "service_cashback",
+            "user",
+            "subscription_payment",
             "description",
             "amount",
-            "type_cashback",
             "status",
         )
