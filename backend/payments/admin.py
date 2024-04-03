@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cashback, PaymentMethods, SubscriptionPayment
+from .models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCashback
 
 
 @admin.register(PaymentMethods)
@@ -21,24 +21,37 @@ class PaymentMethodsAdmin(admin.ModelAdmin):
         return queryset
 
 
-@admin.register(Cashback)
-class CashbackAdmin(admin.ModelAdmin):
-    list_display = (
-        "subscription_service",
-        "payment_methods",
-        "amount",
-        "type_cashback",
-        "status",
-    )
-    list_filter = ("type_cashback", "status")
-    search_fields = ("subscription_service__name",)
-
-
 @admin.register(SubscriptionPayment)
 class SubscriptionPaymentAdmin(admin.ModelAdmin):
     list_display = (
         "subscription",
         "payment_methods",
+        "cost",
+        "status"
     )
     list_filter = ("subscription", "payment_methods")
     search_fields = ("subscription__id", "payment_methods")
+
+
+@admin.register(ServiceCashback)
+class ServiceCashbackAdmin(admin.ModelAdmin):
+    list_display = (
+        "subscription_service",
+        "type_cashback",
+    )
+    list_filter = ("subscription_service", "type_cashback")
+    search_fields = ("subscription_service", "type_cashback")
+
+
+@admin.register(UserCashback)
+class UserCashbackAdmin(admin.ModelAdmin):
+    list_display = (
+        "service_cashback",
+        "user",
+        "subscription_payment",
+        "description",
+        "amount",
+        "status"
+    )
+    list_filter = ("service_cashback", "user", "status")
+    search_fields = ("service_cashback", "user", "status")

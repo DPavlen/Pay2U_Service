@@ -1,9 +1,13 @@
-from payments.models import Cashback, PaymentMethods, SubscriptionPayment
-from payments.serializers import CashbackSerializer, PaymentMethodsSerializer, SubscriptionPaymentSerializer
+from payments.models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCashback
+from payments.serializers import (
+    PaymentMethodsSerializer,
+    ServiceCashbackSerializer,
+    SubscriptionPaymentSerializer,
+    UserCashbackSerializer,
+)
 from rest_framework import viewsets
-
-# from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
 
 
 class PaymentMethodsViewSet(viewsets.ModelViewSet):
@@ -18,8 +22,8 @@ class PaymentMethodsViewSet(viewsets.ModelViewSet):
 
     queryset = PaymentMethods.objects.all()
     serializer_class = PaymentMethodsSerializer
-    permission_classes = (AllowAny,)
-    # pagination_class = LimitOffsetPagination
+    permission_classes = (IsAuthenticated,)
+    pagination_class = LimitOffsetPagination
 
     # def get_queryset(self):
     #     """Проверка Истории платежей по текущему user."""
@@ -30,19 +34,37 @@ class PaymentMethodsViewSet(viewsets.ModelViewSet):
 class SubscriptionPaymentViewSet(viewsets.ModelViewSet):
     queryset = SubscriptionPayment.objects.all()
     serializer_class = SubscriptionPaymentSerializer
+    permission_classes = (IsAuthenticated,)
+    pagination_class = LimitOffsetPagination
 
 
-class CashbackViewSet(viewsets.ModelViewSet):
+class ServiceCashbackViewSet(viewsets.ModelViewSet):
     """
-    Основная View о получении кэшбека.
+    Основная View о кэшбэке сервиса.
     Attributes:
         - queryset: Запрос, возвращающий все объекты PaymentHistory.
-        - serializer_class: CashbackSerializer
-        - permission_classes: Пока всем
+        - serializer_class: ServiceCashbackSerializer
+        - permission_classes: IsAuthenticated
         - pagination_class: Стандартный класс пагинации.
     """
 
-    queryset = Cashback.objects.all()
-    serializer_class = CashbackSerializer
-    permission_classes = (AllowAny,)
-    # pagination_class = LimitOffsetPagination
+    queryset = ServiceCashback.objects.all()
+    serializer_class = ServiceCashbackSerializer
+    permission_classes = (IsAuthenticated,)
+    pagination_class = LimitOffsetPagination
+
+
+class UserCashbackViewSet(viewsets.ModelViewSet):
+    """
+    Основная View о кэшбэке сервиса.
+    Attributes:
+        - queryset: Запрос, возвращающий все объекты UserCashback.
+        - serializer_class: CUserCashbackSerializer
+        - permission_classes: IsAuthenticated
+        - pagination_class: Стандартный класс пагинации.
+    """
+
+    queryset = UserCashback.objects.all()
+    serializer_class = UserCashbackSerializer
+    permission_classes = (IsAuthenticated,)
+    pagination_class = LimitOffsetPagination
