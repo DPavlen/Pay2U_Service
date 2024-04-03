@@ -116,7 +116,10 @@ class TariffList(models.Model):
         default=Duration.ONE_MONTH,
     )
     tariff_full_price = models.FloatField(verbose_name="полная стоимость тарифа")
-    tariff_promo_price = models.FloatField(verbose_name="промо стоимость тарифа")
+    tariff_promo_price = models.FloatField(
+        blank=True,
+        null=True,
+        verbose_name="промо стоимость тарифа")
 
     class Meta:
         verbose_name = "Тариф"

@@ -31,8 +31,12 @@ class PaymentMethods(models.Model):
         max_length=20,
         verbose_name="Способ оплаты подписки",
     )
-    # priorityMethod: true,
-    # methodIcon: paymentMethodLogo1,
+    icon = models.ImageField(
+        verbose_name="Фото cпособа оплаты",
+        upload_to="payments/images/",
+        default=None,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "Метод оплаты подписки"
@@ -90,60 +94,77 @@ class SubscriptionPayment(models.Model):
         return f"{self.payment_methods}"
 
 
-class Cashback(models.Model):
+class ServiceCashback(models.Model):
     """
-    Модель получения кэшбека.
+    Модель кэшбэка сервиса.
     """
-
-    class CashbackType(models.TextChoices):
-        """
-        Тип кэшбека.
-        """
 
     TYPE_CASHBACK = (
         ("fixed_amount", "Фиксированная сумма"),
         ("percentage", "Процент от суммы платежа")
     )
-
-    STATUS_CASHBACK = (
-        ("cashback_completed", "Кешбэк получен"),
-        ("cashback_not_received", "Кешбэк не получен"),
-    )
-
     subscription_service = models.OneToOneField(
         Services,
         on_delete=models.CASCADE,
         verbose_name="Сервис подписки"
     )
-    payment_methods = models.OneToOneField(
-        PaymentMethods,
+    type_cashback = models.CharField(
+        "Тип кэшбека",
+        choices=TYPE_CASHBACK,
+        default="fixed_amount",
+        max_length=155
+    )
+
+    class Meta:
+        verbose_name = "Кэшбек сервиса"
+        verbose_name_plural = "Кэшбеки сервисов"
+        ordering = ["-id"]
+
+    def __str__(self):
+        return self.type_cashback
+
+
+class UserCashback(models.Model):
+    """
+    Модель кэшбэка пользователя.
+    """
+
+    STATUS_CASHBACK = (
+        ("cashback_completed", "Кешбэк получен"),
+        ("cashback_not_received", "Кешбэк не получен"),
+    )
+    service_cashback = models.ForeignKey(
+        ServiceCashback,
         on_delete=models.CASCADE,
-        verbose_name="Способ оплаты"
+        verbose_name="Кэшбек сервиса"
     )
+    user = models.ForeignKey(
+        MyUser,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь")
+    subscription_payment = models.OneToOneField(
+        SubscriptionPayment,
+        on_delete=models.CASCADE,
+        verbose_name="Платеж подписки")
     description = models.TextField(
-        verbose_name="Текст кэшбека"
-    )
+        verbose_name="Текст кэшбека")
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name="Количество кэшбека"
     )
-    type_cashback = models.CharField(
-        "Тип кэшбека",
-        choices=TYPE_CASHBACK,
-        default="fixed_amount",
-        max_length=155,
-    )
     status = models.CharField(
+        "Статус получения кэшбека",
         max_length=100,
         choices=STATUS_CASHBACK,
         default="cashback_not_received",
-        verbose_name="Статус получения кэшбека")
+    )
 
     class Meta:
-        verbose_name = "Кэшбек"
-        verbose_name_plural = "Кэшбеки"
+        verbose_name = "Кэшбек пользователя"
+        verbose_name_plural = "Кэшбеки пользователей"
         ordering = ["-id"]
 
     def __str__(self):
-        return str(self.type_cashback)
+        return (f" Пользователем {self.user} за {self.service_cashback} "
+                f" {self.status} ")
