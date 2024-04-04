@@ -23,6 +23,7 @@ class CustomUserSerializer(UserCreateSerializer):
             "first_name",
             "last_name",
             "password",
+            "first_enter",
         )
         extra_kwargs = {
             "email": {"required": False},
