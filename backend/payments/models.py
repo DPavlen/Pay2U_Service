@@ -1,5 +1,5 @@
 from django.db import models
-from services.models import Services, Subscription
+from services.models import Services, Subscription, TariffList
 from users.models import MyUser
 
 
@@ -20,11 +20,6 @@ class PaymentMethods(models.Model):
     user = models.ForeignKey(
         MyUser, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
-    subscription = models.ForeignKey(
-        Subscription,
-        on_delete=models.CASCADE,
-        verbose_name="Подписка",
-    )
     payment_method = models.TextField(
         choices=PaymentMethodChoises.choices,
         default=PaymentMethodChoises.SBP,
@@ -44,7 +39,26 @@ class PaymentMethods(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return (f"Текущая Подписка {self.subscription} ")
+        return (f"У юзера {self.user} способ оплаты"
+                f" подписки {self.payment_method} ")
+
+
+# class UserPaymentMethod(models.Model):
+#     """
+#     Промежуточная Модель для связи юзеров и способов оплаты.
+#     """
+#
+#     user = models.ForeignKey(
+#         MyUser,
+#         on_delete=models.CASCADE
+#     )
+#     payment_method = models.ForeignKey(
+#         PaymentMethods,
+#         on_delete=models.CASCADE
+#     )
+#
+#     class Meta:
+#         unique_together = ('user', 'payment_method')
 
 
 class SubscriptionPayment(models.Model):
@@ -78,6 +92,11 @@ class SubscriptionPayment(models.Model):
         auto_now_add=True,
         verbose_name="Даты оплаты подписки"
     )
+    expired_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Дата истечения подписки"
+    )
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICES,
@@ -97,22 +116,29 @@ class SubscriptionPayment(models.Model):
 class ServiceCashback(models.Model):
     """
     Модель кэшбэка сервиса.
+    Кэшбек привязывается к сервису!!!
+    .
     """
 
     TYPE_CASHBACK = (
         ("fixed_amount", "Фиксированная сумма"),
         ("percentage", "Процент от суммы платежа")
     )
-    subscription_service = models.OneToOneField(
+    service_cashback = models.OneToOneField(
         Services,
         on_delete=models.CASCADE,
-        verbose_name="Сервис подписки"
+        verbose_name="Кэшбек сервиса"
     )
     type_cashback = models.CharField(
         "Тип кэшбека",
         choices=TYPE_CASHBACK,
-        default="fixed_amount",
+        default="percentage",
         max_length=155
+    )
+    amount_cashback = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Количество кэшбека по тарифу"
     )
 
     class Meta:
@@ -121,7 +147,8 @@ class ServiceCashback(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return self.type_cashback
+        return (f"Сервис: {self.service_cashback}"
+                f" имеет количество кэшбека по тарифу {self.amount_cashback}")
 
 
 class UserCashback(models.Model):
@@ -133,10 +160,10 @@ class UserCashback(models.Model):
         ("cashback_completed", "Кешбэк получен"),
         ("cashback_not_received", "Кешбэк не получен"),
     )
-    service_cashback = models.ForeignKey(
-        ServiceCashback,
+    tariff_cashback = models.OneToOneField(
+        TariffList,
         on_delete=models.CASCADE,
-        verbose_name="Кэшбек сервиса"
+        verbose_name="Тариф сервиса"
     )
     user = models.ForeignKey(
         MyUser,
@@ -167,5 +194,5 @@ class UserCashback(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return (f" Пользователем {self.user} за {self.service_cashback} "
+        return (f" Пользователем {self.user} за {self.tariff_cashback} "
                 f" {self.status} ")

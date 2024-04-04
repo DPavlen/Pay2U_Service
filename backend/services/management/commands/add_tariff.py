@@ -13,19 +13,6 @@ class Command(BaseCommand):
                 for tariff in tariff_data:
                     name = tariff.get("name")
                     description = tariff.get("description")
-                    # services_id = tariff.get("services_id")
-                    # # Проверяем наличие идентификатора services_id и его значение
-                    # if services_id and isinstance(services_id, int) and services_id > 0:
-                    #     # services_id присутствует и является положительным целым числом
-                    #     service = Services.objects.get(id=services_id)
-                    # elif Services.name:
-                    #     # services_name указан
-                    #     Services.name = Services.objects.get(name=Services.name)
-                    # else:
-                    #     # Ни services_id, ни services_name не указаны
-                    #     print(
-                    #         f"Предупреждение: Не указаны ни services_id, ни services_name для тарифа {name}. Тариф будет пропущен.")
-                    #     continue
 
                     services_duration = tariff.get("services_duration")
                     if services_duration:

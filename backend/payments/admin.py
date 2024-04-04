@@ -7,10 +7,9 @@ from .models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCa
 class PaymentMethodsAdmin(admin.ModelAdmin):
     list_display = (
         "user",
-        "subscription",
         "payment_method",
     )
-    list_filter = ("payment_method", "user", "subscription")
+    list_filter = ("payment_method", "user",)
     search_fields = ("user__username", "subscription__name")
 
     def get_queryset(self, request):
@@ -27,31 +26,41 @@ class SubscriptionPaymentAdmin(admin.ModelAdmin):
         "subscription",
         "payment_methods",
         "cost",
-        "status"
+        "status",
+        "expired_date",
     )
-    list_filter = ("subscription", "payment_methods")
-    search_fields = ("subscription__id", "payment_methods")
+    list_filter = ("subscription", "payment_methods", "status", "expired_date")
+    search_fields = ("subscription__id", "payment_methods", "status", "expired_date")
+
+    def get_queryset(self, request):
+        """Проверка на фильтрацию по текущему пользователю."""
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            return queryset.filter(user=request.user)
 
 
 @admin.register(ServiceCashback)
 class ServiceCashbackAdmin(admin.ModelAdmin):
     list_display = (
-        "subscription_service",
+        "service_cashback",
         "type_cashback",
+        "amount_cashback"
     )
-    list_filter = ("subscription_service", "type_cashback")
-    search_fields = ("subscription_service", "type_cashback")
+    list_filter = ("service_cashback", "type_cashback", "amount_cashback")
+    search_fields = ("service_cashback", "type_cashback", "amount_cashback")
 
 
 @admin.register(UserCashback)
 class UserCashbackAdmin(admin.ModelAdmin):
     list_display = (
-        "service_cashback",
+        "tariff_cashback",
         "user",
         "subscription_payment",
         "description",
         "amount",
         "status"
     )
-    list_filter = ("service_cashback", "user", "status")
-    search_fields = ("service_cashback", "user", "status")
+    list_filter = ("tariff_cashback", "user", "status")
+    search_fields = ("tariff_cashback", "user", "status")
