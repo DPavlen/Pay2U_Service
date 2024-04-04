@@ -2,8 +2,9 @@ import datetime
 import json
 
 import factory.fuzzy
-from factories.users import UserFactory
 from services.models import Category, Services, Subscription, TariffList
+
+from tests.factories.users import UserFactory
 
 
 class JSONFactory(factory.DictFactory):
@@ -18,7 +19,7 @@ class CategoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Category
 
-    name = factory.Faker('category_name')
+    name = factory.Faker('name')
     slug = factory.Sequence(lambda n: "name{}".format(n))
     description = factory.SubFactory(UserFactory)
     icon = factory.django.ImageField()

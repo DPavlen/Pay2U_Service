@@ -15,7 +15,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     email = factory.Sequence(lambda n: f"user{n}@example.com")
     username = factory.Faker("user_name")
-    full_name = factory.Faker("full_name")
+    full_name = factory.Faker("name")
     phone = factory.Faker("user_name")
     first_enter = True
     icon = factory.django.ImageField()
