@@ -1,24 +1,29 @@
 from payments.models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCashback
 from rest_framework import serializers
+from users.serializers import ShortUserSerializer
 
 
 class PaymentMethodsSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для истории оплаты подписки.
+    Сериализатор для способов оплаты подписок.
     """
+
+    user = ShortUserSerializer(read_only=True)
 
     class Meta:
         model = PaymentMethods
         fields = (
             "id",
             "user",
-            "subscription",
             "payment_method",
         )
-        # read_only_fields = ("__all__",)
 
 
 class SubscriptionPaymentSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для связи между подпиской и оплатой.
+    """
+
     class Meta:
         model = SubscriptionPayment
         fields = (
@@ -28,8 +33,6 @@ class SubscriptionPaymentSerializer(serializers.ModelSerializer):
             "cost",
             "date",
             "status",
-
-
         )
 
 
@@ -42,8 +45,9 @@ class ServiceCashbackSerializer(serializers.ModelSerializer):
         model = ServiceCashback
         fields = (
             "id",
-            "subscription_service",
+            "service_cashback",
             "type_cashback",
+            "amount_cashback",
         )
 
 
@@ -52,11 +56,13 @@ class UserCashbackSerializer(serializers.ModelSerializer):
     Сериализатор для кэшбэка пользователя.
     """
 
+    user = ShortUserSerializer(read_only=True)
+
     class Meta:
         model = UserCashback
         fields = (
             "id",
-            "service_cashback",
+            "tariff_cashback",
             "user",
             "subscription_payment",
             "description",
