@@ -1,7 +1,7 @@
 import json
 
 from django.core.management.base import BaseCommand
-from services.models import TariffList
+from services.models import Services, TariffList
 
 
 class Command(BaseCommand):
@@ -29,13 +29,15 @@ class Command(BaseCommand):
                     tariff_full_price = tariff.get("tariff_full_price")
                     tariff_promo_price = tariff.get("tariff_promo_price")
 
-                    # Получаем связанный объект Services по идентификатору
-                    # service = Services.objects.get(id=services_id)
+                    # Получаем связанный объект Services по id и связке с name
+                    service_name = tariff.get("service_name")
+                    if service_name:
+                        service, _ = Services.objects.get_or_create(name=service_name)
 
                     TariffList.objects.get_or_create(
                         name=name,
                         description=description,
-                        # services=service,
+                        services=service,
                         services_duration=services_duration,
                         tariff_full_price=tariff_full_price,
                         tariff_promo_price=tariff_promo_price,

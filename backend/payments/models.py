@@ -39,26 +39,8 @@ class PaymentMethods(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return (f"У юзера {self.user} способ оплаты"
+        return (f" У юзера {self.user} способ оплаты"
                 f" подписки {self.payment_method} ")
-
-
-# class UserPaymentMethod(models.Model):
-#     """
-#     Промежуточная Модель для связи юзеров и способов оплаты.
-#     """
-#
-#     user = models.ForeignKey(
-#         MyUser,
-#         on_delete=models.CASCADE
-#     )
-#     payment_method = models.ForeignKey(
-#         PaymentMethods,
-#         on_delete=models.CASCADE
-#     )
-#
-#     class Meta:
-#         unique_together = ('user', 'payment_method')
 
 
 class SubscriptionPayment(models.Model):
@@ -110,7 +92,8 @@ class SubscriptionPayment(models.Model):
         verbose_name_plural = "Подписки и оплаты"
 
     def __str__(self):
-        return f"{self.payment_methods}"
+        return (f"Подписка {self.subscription} "
+                f" способ оплаты{self.payment_methods}")
 
 
 class ServiceCashback(models.Model):
@@ -196,3 +179,21 @@ class UserCashback(models.Model):
     def __str__(self):
         return (f" Пользователем {self.user} за {self.tariff_cashback} "
                 f" {self.status} ")
+
+
+# class UserPaymentMethod(models.Model):
+#     """
+#     Промежуточная Модель для связи юзеров и способов оплаты.
+#     """
+#
+#     user = models.ForeignKey(
+#         MyUser,
+#         on_delete=models.CASCADE
+#     )
+#     payment_method = models.ForeignKey(
+#         PaymentMethods,
+#         on_delete=models.CASCADE
+#     )
+#
+#     class Meta:
+#         unique_together = ('user', 'payment_method')

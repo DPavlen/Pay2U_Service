@@ -54,3 +54,21 @@ class CustomUserReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ("id", "first_name", "last_name")
+
+
+class ShortUserSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для чтения пользователей.
+    Сериализатор, предназначенный только для чтения данных пользователя.
+    Attributes:
+        - Meta: Класс метаданных для определения модели и полей сериализатора.
+    """
+
+    class Meta:
+        model = MyUser
+        fields = (
+            "id",
+            "username",
+            "email",
+            "full_name",
+        )
