@@ -16,6 +16,7 @@ class PaymentMethodsSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "payment_method",
+            "icon",
         )
 
 
