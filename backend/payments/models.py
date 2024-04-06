@@ -11,19 +11,18 @@ class PaymentMethods(models.Model):
         Способ оплаты подписки.
         """
 
-        SBP = " SBP", "СБП"
-        CREDIT_CARD = "credit_card", "Кредитная карта"
-        PAYPAL = "paypal", "PayPal"
-        MOBILE_PAYMENT = "mobile_payment", "Мобильные платежи"
-        CRYPTOCURRENCY = "cryptocurrency", "Платежные системы криптовалюты"
+        SBP = "СБП"
+        CREDIT_CARD = "MasterCard **** 1324"
+        PAYPAL = "PayPal"
+        MOBILE_PAYMENT = "Мобильные платежи"
+        CRYPTOCURRENCY = "Платежные системы криптовалюты"
 
     user = models.ForeignKey(
         MyUser, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
     payment_method = models.TextField(
         choices=PaymentMethodChoises.choices,
-        default=PaymentMethodChoises.SBP,
-        max_length=20,
+        default=PaymentMethodChoises.SBP.value,
         verbose_name="Способ оплаты подписки",
     )
     icon = models.ImageField(
