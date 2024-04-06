@@ -2,6 +2,7 @@
   {
     "name": "1 месяц",
     "description": "1 месяц",
+    "service_name": "Яндекс Плюс",
     "services_duration": "1",
     "tariff_full_price": "399.0",
     "tariff_promo_price": "199.0"
@@ -10,6 +11,7 @@
   {
     "name": "6 месяцев",
     "description": "6 месяцев",
+    "service_name": "Яндекс Плюс",
     "services_duration": "6",
     "tariff_full_price": "2399.0",
     "tariff_promo_price": "1999.0"
@@ -18,11 +20,361 @@
   {
     "name": "12 месяцев",
     "description": "12 месяцев",
+    "service_name": "Яндекс Плюс",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Okko",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Okko",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Okko",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Кинопоиск",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Кинопоиск",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Кинопоиск",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Ivi",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Ivi",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Ivi",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "MyBook",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "MyBook",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "MyBook",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "ЛитРес",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "ЛитРес",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "ЛитРес",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Bookmate",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Bookmate",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Bookmate",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "ОнлайнДоктор",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "ОнлайнДоктор",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "ОнлайнДоктор",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Яндекс Музыка",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Яндекс Музыка",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Яндекс Музыка",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Storytel",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Storytel",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Storytel",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Spotify",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Spotify",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Spotify",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "VK Music",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "VK Music",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "VK Music",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Yanta yoga",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Yanta yoga",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Yanta yoga",
+    "services_duration": "12",
+    "tariff_full_price": "4799.0",
+    "tariff_promo_price": "3499.0"
+  },
+
+  {
+    "name": "1 месяц",
+    "description": "1 месяц",
+    "service_name": "Zoom class",
+    "services_duration": "1",
+    "tariff_full_price": "399.0",
+    "tariff_promo_price": "199.0"
+  },
+
+  {
+    "name": "6 месяцев",
+    "description": "6 месяцев",
+    "service_name": "Zoom class",
+    "services_duration": "6",
+    "tariff_full_price": "2399.0",
+    "tariff_promo_price": "1999.0"
+  },
+
+  {
+    "name": "12 месяцев",
+    "description": "12 месяцев",
+    "service_name": "Zoom class",
     "services_duration": "12",
     "tariff_full_price": "4799.0",
     "tariff_promo_price": "3499.0"
   }
 
 ]
-
-

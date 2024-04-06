@@ -23,6 +23,7 @@ router.register(r"subscriptions", SubscriptionServiceViewSet, basename="subscrip
 router.register(r"payment_methods", PaymentMethodsViewSet, basename="payment_methods")
 router.register(r"subscriptions_payment", SubscriptionPaymentViewSet,
                 basename="subscriptions_payment")
+
 router.register(r"service_cashback",
                 ServiceCashbackViewSet, basename="service_cashback")
 router.register(r"user_cashback",

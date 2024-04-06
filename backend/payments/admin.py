@@ -6,11 +6,12 @@ from .models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCa
 @admin.register(PaymentMethods)
 class PaymentMethodsAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "user",
         "payment_method",
     )
-    list_filter = ("payment_method", "user",)
-    search_fields = ("user__username", "subscription__name")
+    list_filter = ("id", "payment_method", "user",)
+    search_fields = ("id", "user__username", "subscription__name")
 
     def get_queryset(self, request):
         """Проверка на фильтрацию по текущему пользователю."""
@@ -23,6 +24,7 @@ class PaymentMethodsAdmin(admin.ModelAdmin):
 @admin.register(SubscriptionPayment)
 class SubscriptionPaymentAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "subscription",
         "payment_methods",
         "cost",
