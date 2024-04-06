@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from users.models import MyUser
@@ -43,21 +42,6 @@ class CustomUserSerializer(UserCreateSerializer):
         user.set_password(validated_data.get("password"))
         user.save()
         return user
-
-    def validate(self, data):
-        """
-        Пользовательская валидация данных.
-        """
-        request = self.context.get('request')
-        if request and 'HTTP_AUTHORIZATION' in request.META:
-            token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]  # Получение токена из заголовка Authorization
-            user = authenticate(request=request, token=token)  # Попытка аутентификации пользователя по токену
-            if user is not None:
-                return data  # Если пользователь аутентифицирован успешно, возвращаем данные
-            else:
-                raise serializers.ValidationError("Invalid token")  # Если токен недействителен, вызываем ошибку
-        else:
-            raise serializers.ValidationError("Token not provided")  # Если токен не предоставлен, вызываем ошибку
 
 
 class CustomUserReadSerializer(serializers.ModelSerializer):

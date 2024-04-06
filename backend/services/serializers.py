@@ -108,6 +108,7 @@ class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
             "tariff",
             "is_active",
             "expired_date",
+            "auto_payment",
         )
         model = Subscription
 

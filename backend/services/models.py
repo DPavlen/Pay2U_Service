@@ -185,12 +185,3 @@ class Subscription(models.Model):
             return end_date
         self.is_active = True
         return end_date
-
-
-class SubscriptionPayment(models.Model):
-    """
-    Модель для связи подписки и оплаты сервиса.
-
-    """
-
-    pass

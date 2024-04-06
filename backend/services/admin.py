@@ -82,6 +82,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
         "user",
         "tariff",
         "is_active",
+        "auto_payment"
     )
     list_display_links = ("id",)
     search_fields = ("service__name", "user")
