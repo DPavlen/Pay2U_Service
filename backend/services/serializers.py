@@ -97,7 +97,19 @@ class ShortTariffListSerializer(serializers.ModelSerializer):
 
 class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
     tariff = TariffListSerializer()
+    expired_date = serializers.SerializerMethodField()
 
     class Meta:
-        fields = "__all__"
+        fields = (
+            "id",
+            "created_at",
+            "updated_at",
+            "user",
+            "tariff",
+            "is_active",
+            "expired_date",
+        )
         model = Subscription
+
+    def get_expired_date(self, obj):
+        return obj.payments.last().expired_date
