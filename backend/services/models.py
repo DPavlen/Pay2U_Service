@@ -128,10 +128,10 @@ class TariffList(models.Model):
     def __str__(self):
         return (f"{self.services} длительностью {self.services_duration}")
 
-    def subscribe(self, user):
+    def subscribe(self, user, auto_payment=False):
         """Подписаться на сервис."""
         subscription, created = Subscription.objects.get_or_create(
-            user=user, tariff=self
+            user=user, tariff=self, auto_payment=auto_payment
         )
         if not created:
             raise PermissionDenied({"detail": "Already subscribe."})
@@ -159,6 +159,7 @@ class Subscription(models.Model):
     )
     tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
     is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
+    auto_payment = models.BooleanField(default=False, verbose_name="Автоплотеж")
 
     class Meta:
         constraints = [

@@ -15,13 +15,13 @@ def user_2(django_user_model):
 
 @pytest.fixture
 def token(user):
-    #    from djoser.views import TokenCreateView
-    from djoser.utils import login_user
+    from rest_framework_simplejwt.tokens import RefreshToken
 
-    refresh = login_user(user)
+    refresh = RefreshToken.for_user(user)
 
     return {
-        "access": str(refresh),
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
     }
 
 

@@ -1,5 +1,6 @@
 from payments.models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCashback
 from rest_framework import serializers
+from services.serializers import UserSubscriptionServiceSerializer
 from users.serializers import ShortUserSerializer
 
 
@@ -24,6 +25,9 @@ class SubscriptionPaymentSerializer(serializers.ModelSerializer):
     Сериализатор для связи между подпиской и оплатой.
     """
 
+    subscription = UserSubscriptionServiceSerializer()
+    payment_methods = PaymentMethodsSerializer()
+
     class Meta:
         model = SubscriptionPayment
         fields = (
@@ -32,6 +36,7 @@ class SubscriptionPaymentSerializer(serializers.ModelSerializer):
             "payment_methods",
             "cost",
             "date",
+            "expired_date",
             "status",
         )
 
