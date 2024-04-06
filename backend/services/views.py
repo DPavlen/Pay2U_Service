@@ -2,6 +2,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
+from payments.models import SubscriptionPayment
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
@@ -60,7 +61,7 @@ class ServicesViewSet(viewsets.ModelViewSet):
             status.HTTP_201_CREATED: "Подписка добавлена.",
         },
         query_serializer=None,
-        operation_description="передай в query_params duration--> 1,3,6,12"
+        operation_description="передай в headers duration--> 1,3,6,12"
     )
     @action(detail=True, methods=["post"], permission_classes=(IsAuthenticated,))
     def add(self, request, **kwargs):
@@ -68,12 +69,17 @@ class ServicesViewSet(viewsets.ModelViewSet):
         Добавить новую подписку пользователю.
         """
         user = self.request.user
-        duration = self.request.query_params.get('duration')
+        duration = self.request.headers.get('duration')
         tariff = get_object_or_404(TariffList, services=get_object_or_404(
             Services, **kwargs), services_duration=duration
             )
         subscription = tariff.subscribe(user)
-        subscription.check_subscription()
+        SubscriptionPayment.objects.create(
+            subscription=subscription,
+            cost=tariff.tariff_full_price,
+            expired_date=subscription.check_subscription(),
+            status="payment_completed",
+        )
         serializer = UserSubscriptionServiceSerializer(
             subscription, context={"tariff": tariff}
         )
