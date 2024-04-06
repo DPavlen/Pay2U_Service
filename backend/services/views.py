@@ -74,7 +74,7 @@ class ServicesViewSet(viewsets.ModelViewSet):
         auto_payment = request.data.get("auto_payment")
         duration = request.data.get("tariff_id")
         tariff = get_object_or_404(TariffList, services=get_object_or_404(
-            Services, **kwargs), services_duration=duration
+            Services, **kwargs), id=duration
             )
         subscription = tariff.subscribe(user, auto_payment)
         subs_pay = SubscriptionPayment.objects.create(
