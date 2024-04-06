@@ -159,6 +159,7 @@ class Subscription(models.Model):
     )
     tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
     is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
+    auto_payment = models.BooleanField(default=False, verbose_name="Автоплотеж")
 
     class Meta:
         constraints = [
