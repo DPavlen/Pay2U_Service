@@ -2,7 +2,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
-from payments.models import SubscriptionPayment
+from payments.models import PaymentMethods, SubscriptionPayment
+from payments.serializers import SubscriptionPaymentSerializer
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
@@ -69,21 +70,22 @@ class ServicesViewSet(viewsets.ModelViewSet):
         Добавить новую подписку пользователю.
         """
         user = self.request.user
-        duration = self.request.headers.get('duration')
+        payment_methods = get_object_or_404(PaymentMethods, id=request.data.get("payment_methods"))
+        auto_payment = request.data.get("auto_payment")
+        duration = request.data.get("tariff_id")
         tariff = get_object_or_404(TariffList, services=get_object_or_404(
             Services, **kwargs), services_duration=duration
             )
-        subscription = tariff.subscribe(user)
-        SubscriptionPayment.objects.create(
+        subscription = tariff.subscribe(user, auto_payment)
+        subs_pay = SubscriptionPayment.objects.create(
             subscription=subscription,
-            cost=tariff.tariff_full_price,
+            cost=(tariff.tariff_promo_price if tariff.tariff_promo_price is not None else tariff.tariff_full_price) ,
             expired_date=subscription.check_subscription(),
+            payment_methods=payment_methods,
             status="payment_completed",
         )
-        serializer = UserSubscriptionServiceSerializer(
-            subscription, context={"tariff": tariff}
-        )
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = SubscriptionPaymentSerializer(subs_pay)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
         responses={

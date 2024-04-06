@@ -128,10 +128,10 @@ class TariffList(models.Model):
     def __str__(self):
         return (f"{self.services} длительностью {self.services_duration}")
 
-    def subscribe(self, user):
+    def subscribe(self, user, auto_payment=False):
         """Подписаться на сервис."""
         subscription, created = Subscription.objects.get_or_create(
-            user=user, tariff=self
+            user=user, tariff=self, auto_payment=auto_payment
         )
         if not created:
             raise PermissionDenied({"detail": "Already subscribe."})
