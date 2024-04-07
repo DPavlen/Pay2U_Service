@@ -1,6 +1,11 @@
 .service-page {
   text-align: left;
 
+  & h2 {
+    margin: 0;
+  }
+
+  
   &__tab-panel {
     padding: 16px;
     border-radius: 12px;

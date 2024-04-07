@@ -54,6 +54,15 @@ class Api {
       })
       .then(({ data }) => data);
 
+  getSubscription = (id: number) =>
+    this.requester()
+      .get(`/v1/subscriptions/${id}`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('apiToken')}`,
+        },
+      })
+      .then(({ data }) => data);
+
   getAllServicesList = () =>
     this.requester()
       .get('/v1/services', {
@@ -127,6 +136,21 @@ class Api {
           tariff_id: data.tariffId,
           payment_methods: data.paymentMethodId,
           auto_payment: data.autopayment,
+        },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem('apiToken')}`,
+          },
+        }
+      )
+      .then(({ data }) => data);
+
+  setAutopayment = (id: number, newState: boolean) =>
+    this.requester()
+      .patch(
+        `/v1/subscriptions/${id}/`,
+        {
+          auto_payment: newState,
         },
         {
           headers: {

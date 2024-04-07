@@ -14,6 +14,19 @@ import api from '../../utils/api/Api.ts';
 import { setIsLoadingState } from '../../services/pageStatesSlice.ts';
 import { useDispatchTyped, useSelectorTyped } from '../../hooks/store.ts';
 import Loader from '../Loader/Loader.tsx';
+import styled from 'styled-components';
+
+const AutopaymentButton = styled(Button)<{ $active: boolean }>`
+  && {
+    border: 1px solid;
+    border-color: ${({ $active }) =>
+      !$active ? 'var(--green)' : 'var(--red)'};
+    color: ${({ $active }) => (!$active ? 'var(--green)' : 'var(--red)')};
+    :active & {
+      background-color: transparent;
+    }
+  }
+`;
 
 function ServicePage(): ReactElement {
   const { id } = useParams();
@@ -24,8 +37,7 @@ function ServicePage(): ReactElement {
   const userSubscriptions = useSelectorTyped(
     (store) => store.currentUserReducer.userSubscriptions
   );
-  const [selectSubscription, setSelectSubscription] =
-    useState<IServiceExtended>({} as IServiceExtended);
+  const [selectService, setSelectService] = useState({} as IServiceExtended);
   const [userSubscription, setUserSubscription] = useState({} as ISubscription);
   const [tabValue, setTabValue] = useState('0');
   const [selectedTariff, setSelectedTariff] = useState({} as ITariff);
@@ -37,28 +49,28 @@ function ServicePage(): ReactElement {
       .getService(Number(id))
       .then((res: IServiceExtended) => {
         sortTariffs(res);
-        setSelectSubscription(res);
+        setSelectService(res);
       })
       .catch((err) => console.log(err))
       .finally(() => dispatch(setIsLoadingState(false)));
   }, []);
 
   useEffect(() => {
-    if (selectSubscription.tariff) {
-      setSelectedTariff(selectSubscription.tariff[0]);
+    if (selectService.tariff) {
+      setSelectedTariff(selectService.tariff[0]);
     }
-  }, [selectSubscription]);
+  }, [selectService]);
 
   useEffect(() => {
     //ищем соответствие выбранного сервиса со списом подписок пользователя
     if (userSubscriptions) {
-      const matchingSubscription = findMatching(selectSubscription);
+      const matchingSubscription = findMatching(selectService);
       if (matchingSubscription) {
         setAlreadySubscribe(true);
         setUserSubscription(matchingSubscription);
       }
     }
-  }, [userSubscriptions, selectSubscription]);
+  }, [userSubscriptions, selectService]);
   function findMatching(service: IServiceExtended) {
     return userSubscriptions.find(
       (item) => item.tariff.services.id === service.id
@@ -79,7 +91,7 @@ function ServicePage(): ReactElement {
   }
 
   const tabs = () => {
-    return selectSubscription.tariff.map((item, index) => (
+    return selectService.tariff.map((item, index) => (
       <Tab key={`tariff-tab-${index}`} label={item.name} value={`${index}`} />
     ));
   };
@@ -135,7 +147,7 @@ function ServicePage(): ReactElement {
   };
 
   const tabPanels = () => {
-    return selectSubscription.tariff.map((item, index) => (
+    return selectService.tariff.map((item, index) => (
       <TabPanel sx={{ p: 0 }} key={`tariff-panel-${index}`} value={`${index}`}>
         <h3 className="service-page__tariff-heading">{item.name}</h3>
         {tariffInfo(item)}
@@ -145,7 +157,17 @@ function ServicePage(): ReactElement {
 
   function handleTabChange(_event: React.SyntheticEvent, newValue: string) {
     setTabValue(newValue);
-    setSelectedTariff(selectSubscription.tariff[Number(newValue)]);
+    setSelectedTariff(selectService.tariff[Number(newValue)]);
+  }
+
+  function autopaymentButtonHandler() {
+    api
+      .setAutopayment(
+        userSubscription.id,
+        userSubscription.auto_payment ? false : true
+      )
+      .then((res) => setUserSubscription(res))
+      .catch(console.error);
   }
 
   if (isLoading) {
@@ -153,13 +175,13 @@ function ServicePage(): ReactElement {
   } else {
     return (
       <section className="service-page">
-        <ServiceHeader selectSubscription={selectSubscription} />
+        <ServiceHeader selectSubscription={selectService} />
         <div className="service-page__description-wrap">
           <p className="service-page__description-title">Описание</p>
           <p className="service-page__description">
-            {selectSubscription.description}
+            {selectService.description}
           </p>
-          <Link className="link" to={selectSubscription.link} target="_blank">
+          <Link className="link" to={selectService.link} target="_blank">
             Перейти на сервис
           </Link>
         </div>
@@ -171,16 +193,14 @@ function ServicePage(): ReactElement {
                 sx: { display: 'none' },
               }}
             >
-              {selectSubscription && selectSubscription.tariff ? tabs() : ''}
+              {selectService && selectService.tariff ? tabs() : ''}
             </TabList>
             <div className="service-page__tab-panel">
-              {selectSubscription && selectSubscription.tariff
-                ? tabPanels()
-                : ''}
+              {selectService && selectService.tariff ? tabPanels() : ''}
               <Button
                 to={'/purchase'}
                 state={{
-                  subscription: selectSubscription,
+                  subscription: selectService,
                   selectTariff: selectedTariff,
                 }}
                 component={Link}
@@ -198,6 +218,14 @@ function ServicePage(): ReactElement {
                 ? 'Ваша подписка включает в себя сервис автопродления. Мы заранее напомним Вам о предстоящем платеже по электронной почте.'
                 : 'Сейчас автопродление отключено, но можете включить его по кнопке ниже'}
             </p>
+            <AutopaymentButton
+              onClick={autopaymentButtonHandler}
+              $active={userSubscription.auto_payment}
+            >
+              {userSubscription.auto_payment
+                ? 'Отключить автопродление'
+                : 'Включить автопродление'}
+            </AutopaymentButton>
           </>
         )}
       </section>
