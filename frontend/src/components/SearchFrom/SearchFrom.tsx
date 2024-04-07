@@ -67,19 +67,18 @@ const SearchResult = styled.ul<{ $active: boolean }>`
   margin: 0;
   padding-inline: 16px;
   padding-bottom: 20px;
-  display: flex;
   flex-direction: column;
   list-style: none;
-  width: 100%;
-  background-color: var(--white);
   height: 0;
-  transition: height 0.5s ease-in-out;
+  width: 100%;
   overflow-y: scroll;
-  ${({ $active }) =>
-    $active &&
-    `
-    height: 100vh; /* 100% от высоты видимой части экрана */
-  `}
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: var(--white);
+  box-shadow: ${({ $active }) =>
+    $active ? '0px 12px 11px 12px rgba(0, 0, 0, 0.05)' : 'none'};
+  transition: all 0.5s ease-in-out;
+  ${({ $active }) => $active && `height: 100vh;`}
 `;
 
 function SearchFrom(): ReactElement {
@@ -88,11 +87,7 @@ function SearchFrom(): ReactElement {
   const [result, setResult] = useState([] as IServiceExtended[]);
   const dispatch = useDispatchTyped();
 
-  const {
-    register,
-    reset,
-    watch,
-  } = useForm<IFormInput>({
+  const { register, reset, watch } = useForm<IFormInput>({
     defaultValues: { query: '' },
   });
 

@@ -7,6 +7,8 @@ from users.serializers import ShortUserSerializer
 class PaymentMethodsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для способов оплаты подписок.
+    Attributes:
+        - user: Пользователь, связанный с способом оплаты.
     """
 
     user = ShortUserSerializer(read_only=True)
@@ -24,6 +26,9 @@ class PaymentMethodsSerializer(serializers.ModelSerializer):
 class SubscriptionPaymentSerializer(serializers.ModelSerializer):
     """
     Сериализатор для связи между подпиской и оплатой.
+    Attributes:
+        - subscription: Информация о подписке, связанной с платежом.
+        - payment_methods: Информация о методе оплаты подписки.
     """
 
     subscription = UserSubscriptionServiceSerializer()
@@ -44,7 +49,11 @@ class SubscriptionPaymentSerializer(serializers.ModelSerializer):
 
 class ServiceCashbackSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для  сервиса кэшбека.
+    Сериализатор для модели кэшбэка сервиса.
+    Attributes:
+        - service_cashback: Информация о сервисе, связанном с кэшбэком.
+        - type_cashback: Тип кэшбэка.
+        - amount_cashback: Количество кэшбэка.
     """
 
     class Meta:
@@ -59,7 +68,15 @@ class ServiceCashbackSerializer(serializers.ModelSerializer):
 
 class UserCashbackSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для кэшбэка пользователя.
+    Сериализатор для модели кэшбэка пользователя.
+
+    Attributes:
+        - tariff_cashback: Тариф сервиса, связанный с кэшбэком пользователя.
+        - user: Информация о пользователе, связанном с кэшбэком.
+        - subscription_payment: Информация о платеже подписки, связанном с кэшбэком.
+        - description: Описание кэшбэка.
+        - amount: Количество кэшбэка.
+        - status: Статус получения кэшбэка.
     """
 
     user = ShortUserSerializer(read_only=True)

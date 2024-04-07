@@ -10,8 +10,22 @@ User = get_user_model()
 
 
 class Base64ImageField(serializers.ImageField):
+    """
+    Поле для обработки изображений в формате base64.
+    Если переданные данные начинаются с 'data:image',
+    то данные преобразуются из формата base64 в изображение.
+    Attributes:
+        - data: Данные, содержащие изображение.
+    """
 
     def to_internal_value(self, data):
+        """
+        Преобразует данные внутреннего представления.
+        Args:
+        data: Входные данные, содержащие изображение.
+        Returns:
+        Преобразованные данные.
+        """
 
         if isinstance(data, str) and data.startswith("data:image"):
             format, imgstr = data.split(";base64,")
@@ -22,6 +36,13 @@ class Base64ImageField(serializers.ImageField):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Category.
+    Attributes:
+        - icon: Поле для изображения категории в формате base64.
+        - slug: Поле для slug категории (только чтение).
+    """
+
     icon = Base64ImageField(
         required=False,
     )
@@ -33,6 +54,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ShortCategorySerializer(serializers.ModelSerializer):
+    """
+    Короткий сериализатор для модели Category.
+    Attributes:
+        - slug: Поле для slug категории (только чтение).
+    """
 
     slug = serializers.SlugField(read_only=True)
 
@@ -42,6 +68,12 @@ class ShortCategorySerializer(serializers.ModelSerializer):
 
 
 class ServicesSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Services.
+    Attributes:
+        - category: Сериализатор для поля category.
+        - tariff: Метод сериализации для поля tariff.
+    """
 
     category = CategorySerializer()
     tariff = serializers.SerializerMethodField()
@@ -62,20 +94,47 @@ class ServicesSerializer(serializers.ModelSerializer):
         )
 
     def get_tariff(self, obj):
+        """
+        Метод сериализации для поля tariff.
+        """
+
         return TariffListSerializer(obj.tarifflists.all(), many=True).data
 
 
 class ShortServicesSerializer(serializers.ModelSerializer):
+    """
+    Краткий сериализатор для модели Services.
+    Attributes:
+        - category: Краткий сериализатор для поля category.
+    """
+
     category = ShortCategorySerializer()
 
     class Meta:
-        fields = ("id", "name", "category", "link", "is_popular", "icon_big", "icon_square", "icon_small",)
         model = Services
+        fields = (
+            "id",
+            "name",
+            "category",
+            "link",
+            "is_popular",
+            "icon_big",
+            "icon_square",
+            "icon_small",
+        )
 
 
 class TariffListSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели TariffList.
+    Attributes:
+        - services_duration: Поле выбора для продолжительности услуги.
+        - services: Краткий сериализатор для поля services.
+    """
+
     services_duration = serializers.ChoiceField(
-        default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
+        default=TariffList.Duration.ONE_MONTH,
+        choices=TariffList.Duration
     )
     services = ShortServicesSerializer()
 
@@ -85,17 +144,34 @@ class TariffListSerializer(serializers.ModelSerializer):
 
 
 class ShortTariffListSerializer(serializers.ModelSerializer):
+    """
+    Краткий сериализатор для модели TariffList.
+    Attributes:
+        - services: Краткий сериализатор для поля services.
+        - services_duration: Поле выбора для продолжительности услуги.
+    """
+
     services = ShortServicesSerializer()
     services_duration = serializers.ChoiceField(
         default=TariffList.Duration.ONE_MONTH, choices=TariffList.Duration
     )
 
     class Meta:
-        fields = ("id", "services_duration", "services")
         model = TariffList
+        fields = (
+            "id",
+            "services_duration",
+            "services")
 
 
 class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели подписки пользователя на сервис.
+    Attributes:
+        - tariff: Сериализатор тарифа.
+        - expired_date: Поле для получения даты истечения подписки.
+    """
+
     tariff = TariffListSerializer()
     expired_date = serializers.SerializerMethodField()
 
@@ -113,4 +189,9 @@ class UserSubscriptionServiceSerializer(serializers.ModelSerializer):
         model = Subscription
 
     def get_expired_date(self, obj):
+        """
+        Метод для получения даты истечения подписки.
+        Returns: datetime.date: Дата истечения подписки.
+        """
+
         return obj.payments.last().expired_date

@@ -8,5 +8,5 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3001
   },
-  base: 'https://158.160.22.184/'
+  base: 'https://158.160.22.184'
 })

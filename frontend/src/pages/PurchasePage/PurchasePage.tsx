@@ -1,6 +1,6 @@
 import { ReactElement, useEffect } from 'react';
 import './PurchasePage.scss';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ServiceHeader from '../../components/ServiceHeader/ServiceHeader.tsx';
 import {
   IPurchseShippingFields,
@@ -19,7 +19,7 @@ import { SwitchLovely } from '../../components/uxComponents/switch.ts';
 import { useDispatchTyped, useSelectorTyped } from '../../hooks/store.ts';
 import styled from 'styled-components';
 import api from '../../utils/api/Api.ts';
-import { addUserSubscriptions } from '../../services/currentUserSlice.ts';
+import { addPaymentHistory, addUserSubscriptions } from '../../services/currentUserSlice.ts';
 
 const Form = styled.form`
   padding-bottom: 12px;
@@ -84,30 +84,47 @@ const AutopaymentSwitch = styled(FormControlLabel)`
   }
 `;
 
+const StyledCheckbox = styled(FormControlLabel)`
+  & .MuiFormControlLabel-label {
+    font-size: 12px;
+  }
+
+  & a {
+    color: var(--navy-blue-2);
+  }
+`;
+
 function PurchasePage(): ReactElement {
   const dispatch = useDispatchTyped();
   const navigate = useNavigate();
   const paymentMethods = useSelectorTyped(
     (store) => store.currentUserReducer.paymentMethods
   );
+  const reversedPaymentMethods = [...paymentMethods].reverse();
   const subscription = useLocation().state.subscription;
   const tariff: ITariff = useLocation().state.selectTariff;
   const {
     control,
     handleSubmit,
     setValue,
+    formState: { isValid, isDirty },
   } = useForm<IPurchseShippingFields>({
     defaultValues: {
       subscriptionId: subscription.id,
       autopayment: true,
       paymentMethodId: 1,
+      terms: false,
+      politics: false,
     },
     mode: 'onTouched',
   });
 
   useEffect(() => {
-    if (paymentMethods.length > 0) {
-      setValue('paymentMethodId', paymentMethods[0].id);
+    const foundPaymentMethod = paymentMethods.find(
+      (item) => item.payment_method === 'СБП'
+    );
+    if (foundPaymentMethod) {
+      setValue('paymentMethodId', foundPaymentMethod.id);
     }
   }, [paymentMethods, setValue]);
 
@@ -148,11 +165,11 @@ function PurchasePage(): ReactElement {
     api
       .purchase(data)
       .then((res) => {
-        api
-          .getUserSubscriptions()
-          .then((subscriptions) =>
-            dispatch(addUserSubscriptions(subscriptions))
-          )
+        Promise.all([api.getUserSubscriptions(), api.getPaymentHistory()])
+          .then((res) => {
+            dispatch(addUserSubscriptions(res[0]));
+            dispatch(addPaymentHistory(res[1]));
+          })
           .catch(console.error);
         navigate('/successful-purchase', {
           state: { data: res },
@@ -183,7 +200,7 @@ function PurchasePage(): ReactElement {
             name="paymentMethodId"
             render={({ field }) => (
               <RadioGroup name="paymentMethodId" value={field.value}>
-                {paymentMethods.map((method, index) => (
+                {reversedPaymentMethods.map((method, index) => (
                   <RadioButton
                     label={
                       <>
@@ -216,20 +233,50 @@ function PurchasePage(): ReactElement {
             )}
           />
           <FormGroup>
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              label="Принимаю условия сервиса "
+            <Controller
+              control={control}
+              name="terms"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <StyledCheckbox
+                  checked={field.value}
+                  value={field.value}
+                  required
+                  onChange={(e) => field.onChange(e)}
+                  control={<Checkbox />}
+                  label={
+                    <>
+                      <span>Принимаю</span>{' '}
+                      <Link to={'404'}>условия сервиса</Link>
+                    </>
+                  }
+                />
+              )}
             />
-            <FormControlLabel
-              required
-              control={<Checkbox />}
-              label="Принимаю политику обработки данных"
+            <Controller
+              control={control}
+              name="politics"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <StyledCheckbox
+                  checked={field.value}
+                  value={field.value}
+                  required
+                  onChange={(e) => field.onChange(e)}
+                  control={<Checkbox />}
+                  label={
+                    <>
+                      <span>Принимаю</span>{' '}
+                      <Link to={'404'}>политику обработки данных</Link>
+                    </>
+                  }
+                />
+              )}
             />
           </FormGroup>
         </MainWrapper>
         <Button
-          // onClick={handleSubmit(onSubmit)}
+          disabled={!isDirty || !isValid}
           type="submit"
           variant="contained"
         >

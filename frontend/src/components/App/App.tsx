@@ -18,6 +18,7 @@ import UserSubscriptionsPage from '../../pages/UserSubscriptionsPage/UserSubscri
 import { addServicesCategories } from '../../services/servicesCategoriesSlice.ts';
 import {
   addCurrentUser,
+  addPaymentHistory,
   addPaymentMethods,
   addUserSubscriptions,
 } from '../../services/currentUserSlice.ts';
@@ -47,13 +48,21 @@ function App(): ReactElement {
         api.getCategoriesList(),
         api.getPopularServices(),
         api.getPaymentMethods(),
+        api.getPaymentHistory(),
       ])
         .then(
-          ([subscriptions, categories, popularServices, paymentsMethods]) => {
+          ([
+            subscriptions,
+            categories,
+            popularServices,
+            paymentsMethods,
+            paymentHistory,
+          ]) => {
             dispatch(addUserSubscriptions(subscriptions));
             dispatch(addServicesCategories(categories));
             dispatch(addPopularServices(popularServices));
             dispatch(addPaymentMethods(paymentsMethods));
+            dispatch(addPaymentHistory(paymentHistory));
             getAllServicesList(categories);
           }
         )
@@ -116,7 +125,6 @@ function App(): ReactElement {
           element={<UserSubscriptionsPage />}
         />
         <Route path="/user/my-payments" element={<UserPaymentsPage />} />
-        <Route path="/services/category/popular" element={<CategoryPage />} />
         <Route path="/services/category/:category" element={<CategoryPage />} />
         <Route path="/services/:id" element={<ServicePage />} />
         <Route path="/purchase" element={<PurchasePage />} />

@@ -21,7 +21,16 @@ from .serializers import (  # TariffListSerializer,
 
 
 class CategoriesViewSetViewSet(viewsets.ModelViewSet):
-    """Класс для управления категориями."""
+    """
+    ViewSet для управления категориями.
+    Attributes:
+        - queryset: Запрос для получения всех категорий.
+        - serializer_class: Сериализатор категорий.
+        - permission_classes: Классы разрешений для доступа к данным категорий.
+        - pagination_class: Класс пагинации.
+    Methods:
+        - services(self, request, **kwargs): Метод для получения всех сервисов категории.
+    """
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -35,9 +44,16 @@ class CategoriesViewSetViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=["get"], permission_classes=(IsAuthenticated,))
     def services(self, request, **kwargs):
+
         """
-        Показать все сервисаы категории .
+        Показать все сервисы категории.
+        Parameters:
+            request: Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ с данными сервисов категории.
         """
+
         try:
             services = Services.objects.filter(
                 category=Category.objects.get(id=kwargs.get("pk"))
@@ -49,6 +65,24 @@ class CategoriesViewSetViewSet(viewsets.ModelViewSet):
 
 
 class ServicesViewSet(viewsets.ModelViewSet):
+    """
+    Класс для управления сервисами.
+    Attributes:
+        - queryset: Запрос для получения всех сервисов.
+        - serializer_class: Сериализатор сервисов.
+        - permission_classes: Классы разрешений для доступа к данным сервисов.
+        - filter_backends: Методы фильтрации данных.
+        - filterset_class: Класс для фильтрации данных.
+        - filterset_fields: Поля для фильтрации.
+        - pagination_class: Класс пагинации.
+
+    Methods:
+        - add(self, request, **kwargs): Метод для добавления новой подписки пользователю.
+        - disable(self, request, **kwargs): Метод для отключения подписки.
+        - tariff(self, request, **kwargs): Метод для получения всех тарифов сервиса.
+        - popular(self, request, **kwargs): Метод для получения популярных сервисов.
+    """
+
     queryset = Services.objects.all()
     serializer_class = ServicesSerializer
     permission_classes = (AllowAny,)
@@ -66,9 +100,16 @@ class ServicesViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=["post"], permission_classes=(IsAuthenticated,))
     def add(self, request, **kwargs):
+
         """
         Добавить новую подписку пользователю.
+        Parameters:
+            request: Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ с данными новой подписки.
         """
+
         user = self.request.user
         payment_methods = get_object_or_404(PaymentMethods, id=request.data.get("payment_methods"))
         auto_payment = request.data.get("auto_payment")
@@ -94,8 +135,14 @@ class ServicesViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=["post"], permission_classes=(IsAuthenticated,))
     def disable(self, request, **kwargs):
+
         """
         Отключить подписку.
+        Parameters:
+            request: Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ об успешном отключении подписки.
         """
         user = self.request.user
         tariff = get_object_or_404(TariffList, services=get_object_or_404(
@@ -119,6 +166,11 @@ class ServicesViewSet(viewsets.ModelViewSet):
     def tariff(self, request, **kwargs):
         """
         Показать все тарифы сервиса.
+        Parameters:
+            request: Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ с данными тарифов сервиса.
         """
         try:
             tariff = TariffList.objects.filter(
@@ -138,6 +190,11 @@ class ServicesViewSet(viewsets.ModelViewSet):
     def popular(self, request, **kwargs):
         """
         Показать все популярные сервисы у которых is_popular=True.
+        Parameters:
+            request: Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ с данными популярных сервисов.
         """
         popular_services = self.queryset.filter(is_popular=True)[:20]
         serializer = self.get_serializer(popular_services, many=True)
@@ -147,6 +204,11 @@ class ServicesViewSet(viewsets.ModelViewSet):
 class SubscriptionServiceViewSet(viewsets.ModelViewSet):
     """
     Класс для управления Подписками пользователей.
+    Attributes:
+        queryset (Queryset): Запрос для получения списка подписок.
+        serializer_class (Serializer): Класс сериализатора подписок.
+        permission_classes (tuple): Кортеж классов разрешений.
+        pagination_class (Pagination): Класс пагинации для списка подписок.
     """
 
     queryset = Subscription.objects.all()
@@ -155,6 +217,11 @@ class SubscriptionServiceViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
+        """
+        Получение списка подписок пользователя.
+        Returns:
+        Queryset: Список подписок текущего пользователя.
+        """
         return self.request.user.subscriptions.all()
 
     @swagger_auto_schema(
@@ -166,6 +233,11 @@ class SubscriptionServiceViewSet(viewsets.ModelViewSet):
     def check_payments(self, request, **kwargs):
         """
         Формирование календаря оплат.
+        Parameters:
+            request (HttpRequest): Запрос.
+            **kwargs: Дополнительные аргументы.
+        Returns:
+            Response: Ответ с календарем оплат.
         """
         date_payment = {}
         subscriptions = request.user.subscriptions.all()

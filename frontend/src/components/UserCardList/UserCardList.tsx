@@ -7,7 +7,13 @@ interface IUserCardListProps {
   cardsList: ISubscription[];
 }
 
-const Section = styled.section`
+const Section = styled.ul`
+display: flex;
+flex-direction: column;
+gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
   padding-top: 20px;
 `;
 

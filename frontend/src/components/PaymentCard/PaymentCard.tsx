@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ISubscription } from '../../utils/interfaces/interfaces';
+import { IPayment, ISubscription } from '../../utils/interfaces/interfaces';
 import { styled } from 'styled-components';
 
 interface IUserCardProps {
-  card: ISubscription;
+  card: IPayment;
 }
 
-const Card = styled(Link)`
+const Card = styled.div`
   padding: 16px;
   display: flex;
   align-items: center;
@@ -49,31 +49,35 @@ const DescriptionWrapper = styled.div`
 `;
 
 export default function UserCard(props: IUserCardProps) {
+
+  function formatDate(date: string) {
+    const parts = date.split('-');
+    return `${parts[2]}.${parts[1]}.${parts[0]}`;
+  }
   const parts = props.card.expired_date.split('-');
   const newDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
   const formatedPrice = new Intl.NumberFormat('ru-RU').format(
-    props.card.tariff.tariff_full_price
+    props.card.subscription.tariff.tariff_full_price
   );
   return (
-    <li>
-      <Card to={`/services/${props.card.tariff.services.id}`}>
-        <CardImg
-          src={props.card.tariff.services.icon_small}
-          alt={props.card.tariff.services.name}
-        />
-        <DescriptionWrapper>
-          <TitleWrapper>
-            <Title>{props.card.tariff.services.name}</Title>
-            <span>{formatedPrice} ₽</span>
-          </TitleWrapper>
-          <NextPayment>
-            <span>
-              {props.card.auto_payment ? `Спишется ` : 'Действует до '}
-              {newDate}
-            </span>
-          </NextPayment>
-        </DescriptionWrapper>
-      </Card>
-    </li>
+    <Card>
+      <CardImg
+        src={props.card.subscription.tariff.services.icon_small}
+        alt={props.card.subscription.tariff.services.name}
+      />
+      <DescriptionWrapper>
+        <TitleWrapper>
+          <Title>{props.card.subscription.tariff.services.name}</Title>
+          <span>{formatedPrice} ₽</span>
+        </TitleWrapper>
+        <NextPayment>
+          <span>
+            {props.card.subscription.auto_payment
+              ? `Спишется ${formatDate(props.card.expired_date)}`
+              : `Списано ${formatDate(props.card.date)}`}
+          </span>
+        </NextPayment>
+      </DescriptionWrapper>
+    </Card>
   );
 }

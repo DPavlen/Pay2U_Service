@@ -24,7 +24,7 @@ function MainPage(): ReactElement {
         <MainPageUserCards />
         <CardsSlider
           slidesPerView={1.8}
-          items={popularServices}
+          items={popularServices.services}
           title="Популярное"
           cardType="big"
           link="/services/category/popular"

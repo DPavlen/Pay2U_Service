@@ -5,7 +5,13 @@ from .models import MyUser
 
 
 class SubscriptionInline(admin.TabularInline):
-    """Таблица отношений Subscription - User."""
+    """
+    Встраиваемая таблица подписок пользователя.
+    Attributes:
+        - model: Модель подписки.
+        - min_num: Минимальное количество строк для отображения.
+        - extra: Дополнительное количество пустых форм.
+    """
 
     model = Subscription
     min_num = 0
@@ -13,7 +19,12 @@ class SubscriptionInline(admin.TabularInline):
 
 
 class BaseAdminSettings(admin.ModelAdmin):
-    """Базовая настроенная админ панели."""
+    """
+    Базовая настройка панели администратора.
+    Attributes:
+        - empty_value_display: Значение для отображения при пустом поле.
+        - list_filter: Поля для фильтрации в списке объектов.
+    """
 
     empty_value_display = "-пусто-"
     list_filter = ("email", "username")
@@ -21,7 +32,15 @@ class BaseAdminSettings(admin.ModelAdmin):
 
 @admin.register(MyUser)
 class UsersAdmin(BaseAdminSettings):
-    """Настроенная панель админки (управление пользователями)."""
+    """
+    Администратор пользователей.
+    Предоставляет интерфейс для управления пользователями.
+    Attributes:
+        - inlines: Встраиваемые таблицы.
+        - list_display: Поля для отображения в списке объектов.
+        - list_display_links: Поля, являющиеся ссылками на детальную информацию.
+        - search_fields: Поля, по которым доступен поиск.
+    """
 
     inlines = (SubscriptionInline,)
 

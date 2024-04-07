@@ -12,7 +12,7 @@ class FaqViewSet(viewsets.ReadOnlyModelViewSet):
     Attributes:
         - queryset: Запрос, возвращающий все объекты PaymentHistory.
         - serializer_class: PaymentHistorySerializer
-        - permission_classes: Пока всем
+        - permission_classes: AllowAny
         - pagination_class: Стандартный класс пагинации.
     """
 
