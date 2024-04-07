@@ -1,0 +1,15 @@
+#root {
+  font-family: InterVariable, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grey-1scale;
+  text-align: center;
+  color: var(--black);
+}
+
+.page {
+  box-sizing: border-box;
+  max-width: 740px;
+  margin: 0 auto;
+  padding-inline: 16px;
+  padding-bottom: 20px;
+}

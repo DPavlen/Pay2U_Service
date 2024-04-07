@@ -1,0 +1,21 @@
+.card {
+  & img {
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  &_type_big {
+    & img {
+      box-shadow: 0px 5px 10px 0 rgba(95, 105, 131, 0.16),
+        0 5px 4px 0 rgba(95, 105, 131, 0.08), 0 0 4px 0 rgba(95, 105, 131, 0.06);
+    }
+  }
+
+  &_type_square {
+    & img {
+      box-shadow: 0 4px 90px 0 rgba(95, 105, 131, 0.16),
+        0 5px 4px 0 rgba(95, 105, 131, 0.08), 0 0 4px 0 rgba(95, 105, 131, 0.06);
+    }
+  }
+}

@@ -1,0 +1,43 @@
+
+.burger-btn {
+  position: relative;
+  z-index: 30;
+  padding: 11px 5px;
+  display: block;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.burger-btn [class*='burger-btn__bar-'] {
+  margin-bottom: 3px;
+  width: 24px;
+  height: 2px;
+  display: block;
+  border-radius: 2px;
+  background: #000;
+  transition: .4s ease all;
+  transform: rotate(0deg);
+}
+
+.burger-btn:focus {
+  outline-width: 0;
+}
+
+.burger-btn .burger-btn__bar-bot {
+  margin-bottom: 0;
+}
+
+.burger-btn_active .burger-btn__bar-top {
+  transform: rotate(45deg);
+  transform-origin: 20% -10%;
+}
+
+.burger-btn_active .burger-btn__bar-mid {
+  opacity: 0;
+}
+
+.burger-btn_active .burger-btn__bar-bot {
+  transform: rotate(-45deg);
+  transform-origin: 19% 85%;
+}
+

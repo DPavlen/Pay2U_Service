@@ -1,0 +1,59 @@
+.service-page {
+  text-align: left;
+
+  &__tab-panel {
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  &__tariff-heading {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  &__description-wrap {
+    padding-block: 12px 20px;
+    display: flex;
+    flex-direction: column;
+
+    & a {
+      color: var(--navy-blue-2);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.43;
+      width: max-content;
+    }
+  }
+
+  &__description-title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--grey-2);
+  }
+
+  &__description {
+    margin: 0 0 4px;
+  }
+
+  &__costs {
+    color: var(--grey-1);
+  }
+
+  &__cost {
+    line-height: 1.5;
+    color: var(--grey-1);
+
+    &_accent {
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: line-through;
+    }
+  }
+  &__tariff-description {
+    font-size: 12px;
+    line-height: 1.67;
+    color: var(--grey-2);
+  }
+}
