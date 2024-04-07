@@ -77,8 +77,10 @@ class ShortUserSerializer(serializers.ModelSerializer):
 
 class UpdateUserSerializer(UserSerializer):
     """
-    UserSerializer используется для просмотра.
-    И обновления данных существующего пользователя.
+    Сериализатор обновления пользователей.
+    Используется для просмотра и обновления данных существующего пользователя.
+    Атрибуты:
+        - Meta: Класс метаданных для определения модели и полей сериализатора.
     """
 
     class Meta(UserSerializer.Meta):

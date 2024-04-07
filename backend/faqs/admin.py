@@ -5,6 +5,14 @@ from .models import Faq
 
 @admin.register(Faq)
 class FaqAdmin(admin.ModelAdmin):
+    """
+    Настроенная панель админки (вопросы и ответы).
+    Attributes:
+        list_display (tuple): Поля для отображения в списке объектов Faq.
+        list_filter (tuple): Поля для фильтрации списка объектов Faq.
+        search_fields (tuple): Поля, по которым осуществляется поиск.
+    """
+
     list_display = (
         "topic_question",
         "question",

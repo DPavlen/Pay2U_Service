@@ -6,8 +6,18 @@ from django.db import models
 
 class MyUser(AbstractUser):
     """
-    Кастомная модель переопределенного юзера.
-    Добавлены.
+    Модель пользователя с дополнительными полями.
+    Атрибуты:
+        - USER: Константа для обозначения роли обычного пользователя.
+        - ADMIN: Константа для обозначения роли администратора.
+        - email: Поле для электронной почты пользователя.
+        - username: Поле для логина пользователя.
+        - full_name: Поле для полного имени пользователя.
+        - phone: Поле для телефонного номера пользователя.
+        - first_enter: Флаг первого входа пользователя.
+        - icon: Поле для фотографии профиля пользователя.
+        - birth_date: Поле для даты рождения пользователя.
+        - role: Поле для определения роли пользователя.
     """
 
     class RoleChoises(models.TextChoices):
@@ -43,14 +53,19 @@ class MyUser(AbstractUser):
         validators=[validate_mobile],
     )
 
-    first_enter = models.BooleanField(default=True, verbose_name="Флаг первого входа")
+    first_enter = models.BooleanField(
+        default=True, verbose_name="Флаг первого входа")
     icon = models.ImageField(
         verbose_name="Фото профиля",
         upload_to="users/profile_photo",
         null=True,
         blank=True,
     )
-    birth_date = models.DateField("День Рождения пользователя", null=True, blank=True)
+    birth_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="День Рождения пользователя"
+    )
     role = models.TextField(
         "Пользовательская роль юзера",
         choices=RoleChoises.choices,

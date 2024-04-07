@@ -76,23 +76,23 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", default="django"),
-        "USER": os.getenv("POSTGRES_USER", default="django_user"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="django"),
-        "HOST": os.getenv("DB_HOST", default="backend-db"),
-        "PORT": os.getenv("DB_PORT", default=5432),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_DB", default="django"),
+#         "USER": os.getenv("POSTGRES_USER", default="django_user"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="django"),
+#         "HOST": os.getenv("DB_HOST", default="backend-db"),
+#         "PORT": os.getenv("DB_PORT", default=5432),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

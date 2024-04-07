@@ -38,9 +38,20 @@ class Category(models.Model):
         verbose_name_plural = "Категории"
 
     def __str__(self):
+        """
+        Метод для отображения имени категории как строки.
+        """
+
         return self.name
 
     def save(self, **kwargs):
+        """
+        Метод для сохранения категории.
+        Если slug не указан, то генерируется на основе названия категории.
+        Raises:
+        - BadRequestException: Если возникает ошибка целостности при сохранении.
+        """
+
         if not self.slug:
             self.slug = slugify(translit(self.name, "ru", reversed=True))
         try:
@@ -52,20 +63,34 @@ class Category(models.Model):
 class Services(models.Model):
     """
     Класс для сервиса.
-    name - название сервиса
-    category - категория сервиса
-    link - ссылка на сервис на сервис
-    description - описание сервиса
-    icon - иконка категории
+    Attributes:
+        - name: Название сервиса.
+        - category: Категория сервиса.
+        - link: Ссылка на сервис.
+        - description: Описание сервиса.
+        - is_popular: Флаг для определения популярности сервиса.
+        - icon_big: Фото сервиса большое.
+        - icon_square: Фото сервиса среднее.
+        - icon_small: Фото сервиса маленькое.
     """
 
     name = models.CharField(max_length=250, verbose_name="название")
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, verbose_name="категория", null=True
+        Category,
+        on_delete=models.SET_NULL,
+        verbose_name="категория",
+        null=True
     )
-    link = models.URLField(verbose_name="ссылка", max_length=400, blank=True, null=True)
-    description = models.TextField(verbose_name="описание")
-    is_popular = models.BooleanField(default=False, verbose_name="Популярный сервис?")
+    link = models.URLField(
+        verbose_name="ссылка",
+        max_length=400,
+        blank=True,
+        null=True)
+    description = models.TextField(
+        verbose_name="описание")
+    is_popular = models.BooleanField(
+        default=False,
+        verbose_name="Популярный сервис?")
     icon_big = models.ImageField(
         verbose_name="Фото сервиса большое",
         upload_to="services/images/big/",
@@ -90,18 +115,36 @@ class Services(models.Model):
         verbose_name_plural = "Сервисы"
 
     def __str__(self):
+        """
+        Метод для отображения имени сервиса как строки.
+        """
+
         return self.name
 
 
 class TariffList(models.Model):
+    """
+    Класс для тарифа.
+    Attributes:
+        - name: Название тарифа.
+        - description: Описание тарифа.
+        - services: Сервис, к которому привязан тариф.
+        - services_duration: Длительность тарифа (в месяцах).
+        - tariff_full_price: Полная стоимость тарифа.
+        - tariff_promo_price: Промо стоимость тарифа.
+    """
 
     class Duration(models.TextChoices):
         ONE_MONTH = "1", "Один месяц"
         THREE_MONTHS = "3", "Три месяца"
         SIX_MONTHS = "6", "Шесть месяцев"
         ONE_YEAR = "12", "Один год"
-    name = models.CharField(max_length=250, verbose_name="название тарифа")
-    description = models.CharField(max_length=250, verbose_name="описание тарифа")
+    name = models.CharField(
+        max_length=250,
+        verbose_name="название тарифа")
+    description = models.CharField(
+        max_length=250,
+        verbose_name="описание тарифа")
     services = models.ForeignKey(
         Services,
         on_delete=models.SET_NULL,
@@ -115,7 +158,8 @@ class TariffList(models.Model):
         verbose_name="длительность тарифа",
         default=Duration.ONE_MONTH,
     )
-    tariff_full_price = models.FloatField(verbose_name="полная стоимость тарифа")
+    tariff_full_price = models.FloatField(
+        verbose_name="полная стоимость тарифа")
     tariff_promo_price = models.FloatField(
         blank=True,
         null=True,
@@ -129,7 +173,17 @@ class TariffList(models.Model):
         return (f"{self.services} длительностью {self.services_duration}")
 
     def subscribe(self, user, auto_payment=False):
-        """Подписаться на сервис."""
+        """
+        Метод для подписки на сервис по данному тарифу.
+        Args:
+            user: Пользователь, который подписывается на сервис.
+            auto_payment: Флаг для автоматического продления подписки.
+        Returns:
+            subscription: Созданный объект подписки.
+        Raises:
+            PermissionDenied: Если пользователь уже подписан на сервис.
+        """
+
         subscription, created = Subscription.objects.get_or_create(
             user=user, tariff=self, auto_payment=auto_payment
         )
@@ -157,9 +211,17 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="subscriptions"
     )
-    tariff = models.ForeignKey(TariffList, on_delete=models.PROTECT, related_name="subscriptions")
-    is_active = models.BooleanField(default=True, verbose_name="Подписка активна?")
-    auto_payment = models.BooleanField(default=False, verbose_name="Автоплотеж")
+    tariff = models.ForeignKey(
+        TariffList,
+        on_delete=models.PROTECT,
+        related_name="subscriptions"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Подписка активна?"
+    )
+    auto_payment = models.BooleanField(
+        default=False, verbose_name="Автоплотеж")
 
     class Meta:
         constraints = [
@@ -178,6 +240,12 @@ class Subscription(models.Model):
                 f" на сервис: '{self.tariff.services}' ")
 
     def check_subscription(self):
+        """
+        Метод для проверки активности подписки и её продления.
+        Returns:
+        end_date: Дата окончания текущего периода подписки.
+        """
+
         date = datetime.date.today()
         end_date = self.updated_at.date() + relativedelta(months=+int(self.tariff.services_duration))
         if end_date < date:
