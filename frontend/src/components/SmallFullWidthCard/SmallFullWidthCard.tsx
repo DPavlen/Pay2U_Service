@@ -34,7 +34,7 @@ const Card = styled.div`
     font-weight: inherit;
     margin: 0;
 
-    @media (max-width: 374px) {
+    @media (max-width: 380px) {
       font-size: 4.3cqw;
     }
   }

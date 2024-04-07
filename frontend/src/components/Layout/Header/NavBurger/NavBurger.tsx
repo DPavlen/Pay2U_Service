@@ -29,9 +29,6 @@ function NavBurger(props: NavBurgerProps): ReactElement {
             <Link onClick={props.handleMenuClose} className="link" to="/user/my-payments"><img src={ walletIcon } alt=""/>История платежей</Link>
           </li>
           <li>
-            <Link onClick={props.handleMenuClose} className="link" to="/calendar"> <img src={ calendarIcon } alt=""/>Календарь</Link>
-          </li>
-          <li>
             <Link onClick={props.handleMenuClose} className="link" to="/faq"><img src={ faqIcon } alt=""/>Частые вопросы</Link>
           </li>
         </ul>

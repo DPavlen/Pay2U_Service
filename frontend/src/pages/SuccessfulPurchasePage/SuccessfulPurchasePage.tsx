@@ -89,7 +89,6 @@ const OnbordingLink = styled(Link)`
 
 function SuccessfulPurchasePage(): ReactElement {
   const { data } = useLocation().state;
-  console.log(data);
   return (
     <Section>
       <MainWrapper>

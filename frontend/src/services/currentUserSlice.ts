@@ -1,16 +1,23 @@
-import { IPaymentMethod, ISubscription, IUser } from '../utils/interfaces/interfaces.ts';
+import {
+  IPayment,
+  IPaymentMethod,
+  ISubscription,
+  IUser,
+} from '../utils/interfaces/interfaces.ts';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ICurrentUserState {
   currentUser: IUser;
   userSubscriptions: ISubscription[];
-  paymentMethods: IPaymentMethod[]
+  paymentMethods: IPaymentMethod[];
+  paymentHistory: IPayment[];
 }
 
 const initialState: ICurrentUserState = {
   currentUser: {} as IUser,
   userSubscriptions: [],
-  paymentMethods: []
+  paymentMethods: [],
+  paymentHistory: [],
 };
 
 const currentUserSlice = createSlice({
@@ -26,9 +33,16 @@ const currentUserSlice = createSlice({
     addPaymentMethods: (state, action: PayloadAction<IPaymentMethod[]>) => {
       state.paymentMethods = action.payload;
     },
+    addPaymentHistory: (state, action: PayloadAction<IPayment[]>) => {
+      state.paymentHistory = action.payload;
+    },
   },
 });
 
-export const { addCurrentUser, addUserSubscriptions, addPaymentMethods } =
-  currentUserSlice.actions;
+export const {
+  addCurrentUser,
+  addUserSubscriptions,
+  addPaymentMethods,
+  addPaymentHistory,
+} = currentUserSlice.actions;
 export const reducer = currentUserSlice.reducer;

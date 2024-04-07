@@ -18,7 +18,7 @@ export interface IServiceExtended extends IService {
 }
 
 export interface IServiceCategory {
-  category: ICategory;
+  category?: ICategory;
   services: IServiceExtended[];
 }
 
@@ -75,22 +75,23 @@ export interface ICategoryShort {
 }
 
 export interface IUser {
+  //TODO где-от приходит full_name, где-то по оттельности
   id: number;
   email: string;
   username: string;
-  first_name: string;
-  last_name: string;
-
-  paymentMethods: IPaymentMethod[];
-  subscriptions: ISubscription[];
+  first_name?: string;
+  last_name?: string;
+  full_name?: string;
+  first_enter?: boolean;
 }
 
 export interface IPaymentMethod {
   id: number;
   payment_method: string;
-  methodName: string;
-  priorityMethod: boolean;
+  methodName?: string;
+  priorityMethod?: boolean;
   icon: string;
+  user: IUser;
 }
 
 export interface IPurchseShippingFields {
@@ -98,6 +99,8 @@ export interface IPurchseShippingFields {
   paymentMethodId: number;
   subscriptionId: number;
   autopayment: boolean;
+  terms: boolean;
+  politics: boolean;
 }
 
 export interface ISearchShippingFields {
@@ -106,13 +109,13 @@ export interface ISearchShippingFields {
 
 export interface IPayment {
   id: number;
-  subscription: number;
-  payment_methods: number;
+  subscription: ISubscription;
+  payment_methods: IPaymentMethod;
   cost: string;
-  paymentDate: string;
-  expiredDate: string;
-  status: string;
-  cashback: ICashbackSubscription;
+  date: string;
+  expired_date: string;
+  status: 'payment_completed' | 'not_paid';
+  cashback?: ICashbackSubscription;
 }
 
 export interface IFaq {

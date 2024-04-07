@@ -36,6 +36,15 @@ class Api {
       })
       .then(({ data }) => data);
 
+  getPaymentHistory = () =>
+    this.requester()
+      .get('/v1/subscriptions_payment', {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('apiToken')}`,
+        },
+      })
+      .then(({ data }) => data);
+
   getPaymentMethods = () =>
     this.requester()
       .get('/v1/payment_methods', {
