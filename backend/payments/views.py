@@ -30,7 +30,10 @@ class PaymentMethodsViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        """Проверка способов оплат по текущему пользователю."""
+        """
+        Проверка способов оплаты для текущего пользователя.
+        """
+
         user = self.request.user
         return PaymentMethods.objects.filter(user=user)
 
@@ -47,7 +50,8 @@ class PaymentMethodsViewSet(viewsets.ModelViewSet):
         """
         try:
             payment_method = self.get_object()
-            subscription_payments = SubscriptionPayment.objects.filter(payment_methods=payment_method)
+            subscription_payments = SubscriptionPayment.objects.filter(
+                payment_methods=payment_method)
             subscription_payments_serializer = SubscriptionPaymentSerializer(
                 subscription_payments, many=True
             )
@@ -62,6 +66,15 @@ class PaymentMethodsViewSet(viewsets.ModelViewSet):
 
 
 class SubscriptionPaymentViewSet(viewsets.ModelViewSet):
+    """
+    Основная View о платежах подписки пользователя.
+    Attributes:
+        - queryset: Запрос, возвращающий все объекты SubscriptionPayment.
+        - serializer_class: SubscriptionPaymentSerializer
+        - permission_classes: IsAuthenticated
+        - pagination_class: Стандартный класс пагинации.
+    """
+
     queryset = SubscriptionPayment.objects.all()
     serializer_class = SubscriptionPaymentSerializer
     permission_classes = (IsAuthenticated,)
@@ -100,6 +113,9 @@ class UserCashbackViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        """Проверка кэшбека по текущему пользователю."""
+        """
+        Проверка кэшбека по текущему пользователю.
+        """
+
         user = self.request.user
         return UserCashback.objects.filter(user=user)

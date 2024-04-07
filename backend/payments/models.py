@@ -4,11 +4,24 @@ from users.models import MyUser
 
 
 class PaymentMethods(models.Model):
-    """Модель способов оплаты подписок."""
+    """
+    Модель способов оплаты подписок.
+    Attributes:
+        - PaymentMethodChoises: Класс перечисления доступных способов оплаты.
+        - user: Пользователь, к которому привязан способ оплаты.
+        - payment_method: Выбранный способ оплаты.
+        - icon: Иконка способа оплаты.
+    """
 
     class PaymentMethodChoises(models.TextChoices):
         """
-        Способ оплаты подписки.
+        Перечисление доступных способов оплаты.
+        Attributes:
+            - SBP: Система быстрых платежей.
+            - CREDIT_CARD: Кредитная карта.
+            - PAYPAL: Сервис PayPal.
+            - MOBILE_PAYMENT: Мобильные платежи.
+            - CRYPTOCURRENCY: Платежные системы криптовалюты.
         """
 
         SBP = "СБП"
@@ -38,6 +51,11 @@ class PaymentMethods(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
+        """
+        Возвращает строковое представление объекта.
+        Returns:
+        str: Строковое представление объекта.
+        """
         return (f" У юзера {self.user} способ оплаты"
                 f" подписки {self.payment_method} ")
 
@@ -45,9 +63,15 @@ class PaymentMethods(models.Model):
 class SubscriptionPayment(models.Model):
     """
     Модель для связи между подпиской и оплатой.
+    Attributes:
+        - subscription: Связанная подписка.
+        - payment_methods: Способ оплаты подписки.
+        - cost: Сумма оплаты подписки.
+        - date: Дата оплаты подписки.
+        - expired_date: Дата истечения подписки.
+        - status: Статус оплаты подписки.
     """
 
-    # добавить тариф
     STATUS_CHOICES = (
         ("payment_completed", "Оплата прошла"),
         ("not_paid", "Не оплачено"),
@@ -91,6 +115,13 @@ class SubscriptionPayment(models.Model):
         verbose_name_plural = "Подписки и оплаты"
 
     def __str__(self):
+
+        """
+        Возвращает строковое представление объекта.
+        Returns:
+        str: Строковое представление объекта.
+        """
+
         return (f"Подписка {self.subscription} "
                 f" способ оплаты{self.payment_methods}")
 
@@ -98,8 +129,10 @@ class SubscriptionPayment(models.Model):
 class ServiceCashback(models.Model):
     """
     Модель кэшбэка сервиса.
-    Кэшбек привязывается к сервису!!!
-    .
+    Attributes:
+        - service_cashback: Сервис, к которому привязывается кэшбэк.
+        - type_cashback: Тип кэшбэка.
+        - amount_cashback: Количество кэшбэка по тарифу.
     """
 
     TYPE_CASHBACK = (
@@ -129,6 +162,12 @@ class ServiceCashback(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
+
+        """
+        Возвращает строковое представление объекта.
+        Returns: str: Строковое представление объекта.
+        """
+
         return (f"Сервис: {self.service_cashback}"
                 f" имеет количество кэшбека по тарифу {self.amount_cashback}")
 
@@ -136,6 +175,13 @@ class ServiceCashback(models.Model):
 class UserCashback(models.Model):
     """
     Модель кэшбэка пользователя.
+    Attributes:
+        - tariff_cashback: Тариф сервиса.
+        - user: Пользователь.
+        - subscription_payment: Платеж подписки.
+        - description: Текст кэшбэка.
+        - amount: Количество кэшбэка.
+        - status: Статус получения кэшбэка.
     """
 
     STATUS_CASHBACK = (
@@ -176,23 +222,10 @@ class UserCashback(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
+        """
+        Возвращает строковое представление объекта.
+        Returns: str: Строковое представление объекта.
+        """
+
         return (f" Пользователем {self.user} за {self.tariff_cashback} "
                 f" {self.status} ")
-
-
-# class UserPaymentMethod(models.Model):
-#     """
-#     Промежуточная Модель для связи юзеров и способов оплаты.
-#     """
-#
-#     user = models.ForeignKey(
-#         MyUser,
-#         on_delete=models.CASCADE
-#     )
-#     payment_method = models.ForeignKey(
-#         PaymentMethods,
-#         on_delete=models.CASCADE
-#     )
-#
-#     class Meta:
-#         unique_together = ('user', 'payment_method')

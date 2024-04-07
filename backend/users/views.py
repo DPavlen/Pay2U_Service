@@ -12,15 +12,14 @@ from users.serializers import CustomUserSerializer, UpdateUserSerializer
 class CustomUserViewSet(UserViewSet):
     """
     Кастомный ViewSet для работы с пользователями.
-    Он предоставляет эндпоинты для управления пользователями,
-    включая активацию.
+    Предоставляет эндпоинты для управления пользователями, включая активацию.
     Attributes:
-        - queryset: Запрос, возвращающий все объекты User.
-        - serializer_class: Сериализатор, используемый для преобразования
-        данных пользователя.
+        - queryset: Запрос, возвращающий все объекты пользователей.
+        - serializer_class: Сериализатор, используемый для
+        преобразования данных пользователя.
     Permissions:
-        - permission_classes: Список классов разрешений для ViewSet. Здесь
-        установлен AllowAny для открытого доступа.
+        - permission_classes: Список классов разрешений для ViewSet.
+        Здесь установлен AllowAny для открытого доступа.
     Methods:
         - activate(self, request, uid, token, format=None): Активирует
         пользователя с заданным UID и токеном.
@@ -44,6 +43,11 @@ class CustomUserViewSet(UserViewSet):
     )
     @action(["get", "patch"], detail=False)
     def me(self, request):
+        """
+        Обрабатывает GET и PATCH запросы для текущего пользователя.
+        PATCH позволяет частично менять данные указанные в сериализаторе.
+        """
+
         if request.method == "GET":
             user = request.user
             serializer = CustomUserSerializer(user)

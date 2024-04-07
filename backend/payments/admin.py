@@ -5,6 +5,15 @@ from .models import PaymentMethods, ServiceCashback, SubscriptionPayment, UserCa
 
 @admin.register(PaymentMethods)
 class PaymentMethodsAdmin(admin.ModelAdmin):
+    """
+    Администратор методов оплаты.
+    Отображает и фильтрует список методов оплаты.
+    Attributes:
+        - list_display: Список отображаемых полей в списке объектов.
+        - list_filter: Список полей, по которым доступна фильтрация.
+        - search_fields: Поля, по которым доступен поиск.
+    """
+
     list_display = (
         "id",
         "user",
@@ -14,7 +23,7 @@ class PaymentMethodsAdmin(admin.ModelAdmin):
     search_fields = ("id", "user__username", "subscription__name")
 
     def get_queryset(self, request):
-        """Проверка на фильтрацию по текущему пользователю."""
+        """Получение запроса, учитывая права текущего пользователя."""
         queryset = super().get_queryset(request)
         if not request.user.is_superuser:
             queryset = queryset.filter(user=request.user)
@@ -23,6 +32,15 @@ class PaymentMethodsAdmin(admin.ModelAdmin):
 
 @admin.register(SubscriptionPayment)
 class SubscriptionPaymentAdmin(admin.ModelAdmin):
+    """
+    Администратор платежей за подписки.
+    Отображает и фильтрует список платежей за подписки.
+    Attributes:
+        - list_display: Список отображаемых полей в списке объектов.
+        - list_filter: Список полей, по которым доступна фильтрация.
+        - search_fields: Поля, по которым доступен поиск.
+    """
+
     list_display = (
         "id",
         "subscription",
@@ -35,7 +53,9 @@ class SubscriptionPaymentAdmin(admin.ModelAdmin):
     search_fields = ("subscription__id", "payment_methods", "status", "expired_date")
 
     def get_queryset(self, request):
-        """Проверка на фильтрацию по текущему пользователю."""
+        """
+        Получение запроса, учитывая права текущего пользователя.
+        """
         queryset = super().get_queryset(request)
         if request.user.is_superuser:
             return queryset
@@ -45,6 +65,15 @@ class SubscriptionPaymentAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceCashback)
 class ServiceCashbackAdmin(admin.ModelAdmin):
+    """
+    Администратор кэшбека за услуги.
+    Отображает и фильтрует список кэшбека за услуги.
+    Attributes:
+        - list_display: Список отображаемых полей в списке объектов.
+        - list_filter: Список полей, по которым доступна фильтрация.
+        - search_fields: Поля, по которым доступен поиск.
+    """
+
     list_display = (
         "service_cashback",
         "type_cashback",
@@ -56,6 +85,15 @@ class ServiceCashbackAdmin(admin.ModelAdmin):
 
 @admin.register(UserCashback)
 class UserCashbackAdmin(admin.ModelAdmin):
+    """
+    Администратор кэшбека пользователей.
+    Отображает и фильтрует список кэшбека пользователей.
+    Attributes:
+        - list_display: Список отображаемых полей в списке объектов.
+        - list_filter: Список полей, по которым доступна фильтрация.
+        - search_fields: Поля, по которым доступен поиск.
+    """
+
     list_display = (
         "tariff_cashback",
         "user",
